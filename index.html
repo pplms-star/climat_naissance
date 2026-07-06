@@ -79,3 +79,584 @@
     opacity: 0.9;
   }
 </style>
+
+<p class="madlib">
+  Tu es né·e en
+  <div class="slider-annee-container">
+    <input type="range" id="slider-annee" min="1955" max="2010" value="1980" class="slider">
+    <span id="valeur-annee">1980</span>
+  </div>
+  <select id="annee" style="display: none;" required>
+    <option value="" disabled selected>choisis une année</option>
+  </select>
+  et tu veux savoir ce qu'il en est à
+  <select id="commune" required>
+    <option value="" disabled selected>choisis une commune</option>
+  </select>
+  <span id="comparaison-container">
+    et comparer avec
+    <select id="commune2" required>
+      <option value="" disabled selected>choisis une autre commune</option>
+    </select>
+    <button id="btn-comparer">Comparer</button>
+  </span>.
+</p>
+
+const ANNEE_MIN = 1955, ANNEE_MAX = 2010;
+let charts = {};
+let data1 = null; // Données de la première commune
+let data2 = null; // Données de la deuxième commune
+let anneeNaissance = null;
+let COMMUNES = null, STATIONS = null;
+let dejaCharge = false;
+
+// ============ INIT ============
+async function init() {
+  // Initialiser le slider pour l'année
+  const sliderAnnee = document.getElementById('slider-annee');
+  const valeurAnnee = document.getElementById('valeur-annee');
+  sliderAnnee.min = ANNEE_MIN;
+  sliderAnnee.max = ANNEE_MAX;
+  sliderAnnee.value = 1980;
+  valeurAnnee.textContent = sliderAnnee.value;
+
+  // Synchroniser slider et select caché
+  sliderAnnee.addEventListener('input', function() {
+    valeurAnnee.textContent = this.value;
+    document.getElementById('annee').value = this.value;
+    tenterDeclenchement();
+  });
+  document.getElementById('annee').addEventListener('change', function() {
+    sliderAnnee.value = this.value;
+    valeurAnnee.textContent = this.value;
+  });
+
+  // Charger les communes
+  const selCommune = document.getElementById('commune');
+  const selCommune2 = document.getElementById('commune2');
+  try {
+    const res = await fetch('data/communes.json');
+    const index = await res.json();
+    COMMUNES = index.communes;
+    STATIONS = index.stations;
+
+    // Remplir les deux sélecteurs de communes
+    [selCommune, selCommune2].forEach(sel => {
+      COMMUNES
+        .slice()
+        .sort((a, b) => a.commune.localeCompare(b.commune, 'fr'))
+        .forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.commune;
+          opt.textContent = c.commune;
+          sel.appendChild(opt);
+        });
+    });
+  } catch(e) {
+    console.error("Erreur de chargement des communes :", e);
+  }
+
+  // Écouteurs pour la comparaison
+  document.getElementById('commune').addEventListener('change', function() {
+    document.getElementById('comparaison-container').style.display = 'inline-block';
+    document.getElementById('btn-comparer').style.display = 'inline-block';
+  });
+  document.getElementById('btn-comparer').addEventListener('click', lancerComparaison);
+
+  // Charger les paramètres de l'URL au démarrage
+  const params = new URLSearchParams(window.location.search);
+  const anneeURL = params.get('annee');
+  const communeURL = params.get('commune');
+  if (anneeURL) {
+    sliderAnnee.value = anneeURL;
+    valeurAnnee.textContent = anneeURL;
+    document.getElementById('annee').value = anneeURL;
+    if (communeURL) {
+      document.getElementById('commune').value = communeURL;
+      setTimeout(tenterDeclenchement, 500);
+    }
+  }
+
+  dessinerStripesDecor();
+  configurerReveal();
+}
+
+// ============ FONCTIONS UTILITAIRES ============
+function dessinerStripesDecor() {
+  const c = document.getElementById('stripes-hero');
+  c.innerHTML = '';
+  for(let i = 0; i < 40; i++) {
+    const div = document.createElement('div');
+    div.style.background = couleurAnomalie((i/39)*2-1);
+    c.appendChild(div);
+  }
+}
+
+function couleurAnomalie(t) {
+  t = Math.max(-1, Math.min(1, t));
+  const cold = [62, 124, 177];
+  const warm = [214, 69, 69];
+  const mid = [234, 239, 243];
+  let c1, c2, f;
+  if(t < 0) { c1 = cold; c2 = mid; f = t + 1; }
+  else { c1 = mid; c2 = warm; f = t; }
+  const r = Math.round(c1[0] + (c2[0] - c1[0]) * f);
+  const g = Math.round(c1[1] + (c2[1] - c1[1]) * f);
+  const b = Math.round(c1[2] + (c2[2] - c1[2]) * f);
+  return `rgb(${r},${g},${b})`;
+}
+
+function configurerReveal() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, {threshold: 0.15});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ============ MISE À JOUR DE L'URL ============
+function mettreAJourURL(annee, commune) {
+  const url = new URL(window.location);
+  url.searchParams.set('annee', annee);
+  url.searchParams.set('commune', commune);
+  history.pushState({}, '', url);
+}
+
+// ============ DÉCLENCHEMENT DU RÉCIT ============
+async function tenterDeclenchement() {
+  const anneeVal = document.getElementById('annee').value;
+  const communeVal = document.getElementById('commune').value;
+  if(!anneeVal || !communeVal) return;
+
+  anneeNaissance = parseInt(anneeVal, 10);
+
+  const entreeCommune = COMMUNES.find(c => c.commune === communeVal);
+  if(!entreeCommune) return;
+  const station = STATIONS.find(s => s.id === entreeCommune.station_id);
+  if(!station) return;
+
+  const noteStation = document.getElementById('note-station');
+  if(entreeCommune.commune !== station.nom) {
+    noteStation.style.display = 'block';
+    noteStation.innerHTML = `Il n'y a pas de station météo à ${entreeCommune.commune} :
+      on utilise les relevés de la station la plus proche, <strong>${station.nom}</strong>
+      (${entreeCommune.distance_km} km).`;
+  } else {
+    noteStation.style.display = 'none';
+  }
+
+  document.getElementById('indice-scroll').style.visibility = 'visible';
+
+  try {
+    const res = await fetch(station.fichier);
+    data1 = await res.json();
+    data1.commune = entreeCommune.commune;
+    construireRecit(data1, anneeNaissance);
+    mettreAJourURL(anneeVal, communeVal);
+    if(!dejaCharge) {
+      document.getElementById('recit').style.display = 'block';
+      dejaCharge = true;
+      setTimeout(() => document.getElementById('sec-reference').scrollIntoView({behavior: 'smooth', block: 'start'}), 400);
+    }
+  } catch(err) {
+    console.error("Erreur de chargement des données :", err);
+  }
+}
+
+// ============ FENÊTRE DE RÉFÉRENCE ============
+function fenetrePersonnelle(anneeNaissance, dataMin, dataMax) {
+  let start = anneeNaissance - 15;
+  let end = anneeNaissance + 14;
+  if(start < dataMin) { start = dataMin; end = start + 29; }
+  if(end > dataMax) { end = dataMax; start = end - 29; }
+  start = Math.max(start, dataMin);
+  return {start, end};
+}
+
+// ============ MOYENNES ============
+function moyennePeriode(annees, cle, start, end) {
+  const sous = annees.filter(a => a.annee >= start && a.annee <= end && a[cle] != null);
+  if(sous.length === 0) return null;
+  return sous.reduce((s, a) => s + a[cle], 0) / sous.length;
+}
+
+function moyenneMobile(annees, cle, demiFenetre = 4) {
+  return annees.map((a, i) => {
+    const debut = Math.max(0, i - demiFenetre);
+    const fin = Math.min(annees.length - 1, i + demiFenetre);
+    const fenetre = annees.slice(debut, fin + 1).filter(x => x[cle] != null);
+    if(fenetre.length === 0) return null;
+    return fenetre.reduce((s, x) => s + x[cle], 0) / fenetre.length;
+  });
+}
+
+// ============ CONSTRUCTION DU RÉCIT ============
+function construireRecit(data, anneeNaissance) {
+  const annees = data.annees;
+  const dataMin = annees[0].annee;
+  const dataMax = annees[annees.length - 1].annee;
+  const ref = fenetrePersonnelle(anneeNaissance, dataMin, dataMax);
+  const actuel = {start: dataMax - 29, end: dataMax};
+
+  // Climate Stripes : basées sur la référence 1976-2005
+  const refMoyTx = moyennePeriode(annees, 'tx_moy', 1976, 2005);
+  let maxAbs = 1; // Valeur par défaut
+  if (refMoyTx !== null) {
+    const anomalies = annees.map(a => a.tx_moy - refMoyTx).filter(a => a !== null);
+    maxAbs = Math.max(...anomalies.map(Math.abs), 1); // Éviter la division par 0
+  }
+  const c = document.getElementById('stripes-hero');
+  c.innerHTML = '';
+  annees.forEach(a => {
+    const div = document.createElement('div');
+    const anomalie = (a.tx_moy - refMoyTx) / maxAbs;
+    div.style.background = couleurAnomalie(anomalie);
+    div.title = `${a.annee} : ${a.tx_moy.toFixed(1)}°C (anomalie : ${(a.tx_moy - refMoyTx).toFixed(1)}°C)`;
+    c.appendChild(div);
+  });
+
+  // Texte de référence
+  const texteRef = document.getElementById('texte-reference');
+  texteRef.innerHTML = `Pour <strong>${data.commune}</strong>, ta période de référence est
+    <strong>${ref.start}–${ref.end}</strong>` +
+    (anneeNaissance - 15 < dataMin || anneeNaissance + 14 > dataMax
+      ? ` (calée sur les données disponibles, ${dataMin}–${dataMax})`
+      : ` (les 15 ans avant et après ${anneeNaissance})`) +
+    `. On la compare à la normale actuelle, <strong>${actuel.start}–${actuel.end}</strong>.`;
+
+  // Étapes du récit
+  construireIndicateur({
+    annees, cle: 'ete_tm_moy', ref, actuel,
+    idTexte: 'texte-ete', idDelta: 'delta-ete', idCanvas: 'graph-ete',
+    phrase: (v1, v2, delta) => `Pendant ta période de référence, l'été affichait en
+      moyenne <strong>${v1.toFixed(1)}°C</strong>. Sur 1995–2024, cette moyenne est
+      passée à <strong>${v2.toFixed(1)}°C</strong>.`
+  });
+
+  construireIndicateur({
+    annees, cle: 'tx_moy', ref, actuel,
+    idTexte: 'texte-annee', idDelta: 'delta-annee', idCanvas: 'graph-annee',
+    phrase: (v1, v2, delta) => `La température maximale moyenne sur l'année est passée
+      de <strong>${v1.toFixed(1)}°C</strong> à <strong>${v2.toFixed(1)}°C</strong>.`
+  });
+
+  construireCartes(annees, ref, actuel);
+  construireGraphExtremes(annees, ref, actuel);
+
+  if(data.projections) {
+    document.getElementById('bloc-avenir').innerHTML =
+      '<p class="texte">Données de projection détectées — section à construire.</p>';
+  }
+}
+
+// ============ INDICATEURS ============
+function construireIndicateur({annees, cle, ref, actuel, idTexte, idDelta, idCanvas, phrase}) {
+  const v1 = moyennePeriode(annees, cle, ref.start, ref.end);
+  const v2 = moyennePeriode(annees, cle, actuel.start, actuel.end);
+  const delta = v2 - v1;
+
+  document.getElementById(idTexte).innerHTML = phrase(v1, v2, delta);
+  const elDelta = document.getElementById(idDelta);
+  elDelta.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}°C`;
+  elDelta.className = 'val ' + (delta >= 0 ? 'up' : 'down');
+
+  const labels = annees.map(a => a.annee);
+  const valeurs = annees.map(a => a[cle]);
+  const mobile = moyenneMobile(annees, cle);
+
+  const bandesPlugin = {
+    id: 'bandes_' + idCanvas,
+    beforeDraw(chart) {
+      const {ctx, chartArea, scales: {x}} = chart;
+      if(!chartArea) return;
+      const dessiner = (start, end, color) => {
+        const x1 = x.getPixelForValue(start);
+        const x2 = x.getPixelForValue(end);
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+        ctx.restore();
+      };
+      dessiner(ref.start, ref.end, 'rgba(62,124,177,0.15)');
+      dessiner(actuel.start, actuel.end, 'rgba(214,69,69,0.15)');
+    }
+  };
+
+  if(charts[idCanvas]) charts[idCanvas].destroy();
+  charts[idCanvas] = new Chart(document.getElementById(idCanvas), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label: 'Valeur annuelle', data: valeurs, borderColor: 'rgba(234,239,243,0.35)',
+         borderWidth: 1, pointRadius: 2, pointBackgroundColor: 'rgba(234,239,243,0.5)', showLine: false},
+        {label: 'Moyenne mobile 10 ans', data: mobile, borderColor: '#E8A33D',
+         borderWidth: 2.5, pointRadius: 0, tension: 0.3}
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8FA0B8', maxTicksLimit: 12 }, grid: { color: '#1A2436' } },
+        y: { ticks: { color: '#8FA0B8' }, grid: { color: '#1A2436' } }
+      }
+    },
+    plugins: [bandesPlugin]
+  });
+}
+
+// ============ CARTES RÉCAP ============
+function construireCartes(annees, ref, actuel) {
+  const indicateurs = [
+    {cle: 'ete_tm_moy', label: 'Été (moyenne)', unite: '°C', dec: 1, inv: false},
+    {cle: 'tx_moy', label: 'Année (Tx moyenne)', unite: '°C', dec: 1, inv: false},
+    {cle: 'nuits_tropicales', label: 'Nuits tropicales', unite: 'j/an', dec: 1, inv: false},
+    {cle: 'jours_chauds_30', label: 'Jours > 30°C', unite: 'j/an', dec: 1, inv: false},
+    {cle: 'jours_gel', label: 'Jours de gel', unite: 'j/an', dec: 1, inv: true},
+    {cle: 'jours_vague_chaleur', label: 'Jours canicule', unite: 'j/an', dec: 1, inv: false},
+  ];
+  const cartes = document.getElementById('cartes');
+  cartes.innerHTML = '';
+  indicateurs.forEach(ind => {
+    const v1 = moyennePeriode(annees, ind.cle, ref.start, ref.end);
+    const v2 = moyennePeriode(annees, ind.cle, actuel.start, actuel.end);
+    const delta = v2 - v1;
+    const hausse = ind.inv ? delta < 0 : delta > 0;
+    const classe = delta === 0 ? '' : (hausse ? 'up' : 'down');
+    const signe = delta >= 0 ? '+' : '';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="label">${ind.label}</div>
+      <div class="value ${classe}">${signe}${delta.toFixed(ind.dec)} ${ind.unite}</div>
+      <div class="sub">${v1.toFixed(ind.dec)} → ${v2.toFixed(ind.dec)}</div>`;
+    cartes.appendChild(div);
+  });
+}
+
+// ============ GRAPHIQUE EXTRÊMES ============
+function construireGraphExtremes(annees, ref, actuel) {
+  const cles = ['jours_chauds_25','jours_chauds_30','nuits_tropicales','jours_gel','jours_vague_chaleur'];
+  const labels = ['Jours >25°C','Jours >30°C','Nuits tropicales','Jours de gel','Jours canicule'];
+  if(charts['extremes']) charts['extremes'].destroy();
+  charts['extremes'] = new Chart(document.getElementById('graph-extremes'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label: `Ta référence (${ref.start}–${ref.end})`,
+         data: cles.map(c => moyennePeriode(annees, c, ref.start, ref.end)), backgroundColor: '#3E7CB1'},
+        {label: `Aujourd'hui (${actuel.start}–${actuel.end})`,
+         data: cles.map(c => moyennePeriode(annees, c, actuel.start, actuel.end)), backgroundColor: '#D64545'}
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#8FA0B8' } } },
+      scales: {
+        x: { ticks: { color: '#8FA0B8' }, grid: { display: false } },
+        y: { ticks: { color: '#8FA0B8' }, grid: { color: '#1A2436' }, title: { display: true, text: 'jours / an en moyenne', color: '#8FA0B8' } }
+      }
+    }
+  });
+}
+
+// ============ COMPARAISON ENTRE COMMUNES ============
+async function lancerComparaison() {
+  const commune2Val = document.getElementById('commune2').value;
+  if (!commune2Val) return;
+
+  const entreeCommune2 = COMMUNES.find(c => c.commune === commune2Val);
+  if (!entreeCommune2) return;
+  const station2 = STATIONS.find(s => s.id === entreeCommune2.station_id);
+  if (!station2) return;
+
+  try {
+    const res = await fetch(station2.fichier);
+    data2 = await res.json();
+    data2.commune = entreeCommune2.commune;
+    construireComparaison(data1, data2, anneeNaissance);
+  } catch(err) {
+    console.error("Erreur de chargement des données pour la comparaison :", err);
+  }
+}
+
+function construireComparaison(d1, d2, annee) {
+  // Masquer le récit initial
+  document.getElementById('recit').style.display = 'none';
+
+  // Créer une nouvelle section pour la comparaison
+  const sectionComparaison = document.createElement('div');
+  sectionComparaison.id = 'recit-comparaison';
+  sectionComparaison.innerHTML = `
+    <section class="reveal">
+      <p class="eyebrow">Comparaison · ${d1.commune} vs ${d2.commune}</p>
+      <h2>Évolution climatique comparée</h2>
+      <p class="texte">Voici l'évolution des températures pour <strong>${d1.commune}</strong> (en bleu) et <strong>${d2.commune}</strong> (en rouge).</p>
+      <div class="encadre-methode">
+        <b>Méthode</b> — Les deux communes sont comparées sur la même période de référence (30 ans centrées sur ${annee}).
+      </div>
+    </section>
+
+    <section class="reveal">
+      <p class="eyebrow">Été</p>
+      <h2>Températures estivales</h2>
+      <div class="chart-box">
+        <canvas id="graph-ete-comparaison" height="130"></canvas>
+        <div class="legende-periodes">
+          <span><i class="pastille" style="background:var(--cold)"></i>${d1.commune}</span>
+          <span><i class="pastille" style="background:var(--warm)"></i>${d2.commune}</span>
+          <span><i class="pastille" style="background:var(--amber);border-radius:50%"></i>moyenne mobile 10 ans</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <p class="eyebrow">Année complète</p>
+      <h2>Températures annuelles</h2>
+      <div class="chart-box">
+        <canvas id="graph-annee-comparaison" height="130"></canvas>
+        <div class="legende-periodes">
+          <span><i class="pastille" style="background:var(--cold)"></i>${d1.commune}</span>
+          <span><i class="pastille" style="background:var(--warm)"></i>${d2.commune}</span>
+          <span><i class="pastille" style="background:var(--amber);border-radius:50%"></i>moyenne mobile 10 ans</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <p class="eyebrow">Extrêmes</p>
+      <h2>Jours extrêmes comparés</h2>
+      <div class="chart-box">
+        <canvas id="graph-extremes-comparaison" height="150"></canvas>
+      </div>
+    </section>
+  `;
+
+  // Insérer avant le footer
+  document.querySelector('footer').before(sectionComparaison);
+
+  // Construire les graphiques
+  construireGraphComparaison(d1, d2, annee, 'ete_tm_moy', 'graph-ete-comparaison');
+  construireGraphComparaison(d1, d2, annee, 'tx_moy', 'graph-annee-comparaison');
+  construireGraphExtremesComparaison(d1, d2, annee);
+
+  // Configurer le reveal pour la nouvelle section
+  configurerReveal();
+
+  // Scroll vers la comparaison
+  setTimeout(() => document.getElementById('recit-comparaison').scrollIntoView({behavior: 'smooth', block: 'start'}), 400);
+}
+
+function construireGraphComparaison(d1, d2, annee, cle, canvasId) {
+  const ref = fenetrePersonnelle(annee, d1.annees[0].annee, d1.annees[d1.annees.length - 1].annee);
+  const labels = d1.annees.map(a => a.annee);
+  const mobile1 = moyenneMobile(d1.annees, cle);
+  const mobile2 = moyenneMobile(d2.annees, cle);
+  const valeurs1 = d1.annees.map(a => a[cle]);
+  const valeurs2 = d2.annees.map(a => a[cle]);
+
+  const bandesPlugin = {
+    id: 'bandes_' + canvasId,
+    beforeDraw(chart) {
+      const {ctx, chartArea, scales: {x}} = chart;
+      if(!chartArea) return;
+      const dessiner = (start, end, color) => {
+        const x1 = x.getPixelForValue(start);
+        const x2 = x.getPixelForValue(end);
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+        ctx.restore();
+      };
+      dessiner(ref.start, ref.end, 'rgba(62,124,177,0.1)');
+    }
+  };
+
+  if(charts[canvasId]) charts[canvasId].destroy();
+  charts[canvasId] = new Chart(document.getElementById(canvasId), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: d1.commune,
+          data: valeurs1,
+          borderColor: 'rgba(62,124,177,0.7)',
+          backgroundColor: 'rgba(62,124,177,0.1)',
+          borderWidth: 1,
+          pointRadius: 2,
+          tension: 0.3
+        },
+        {
+          label: d2.commune,
+          data: valeurs2,
+          borderColor: 'rgba(214,69,69,0.7)',
+          backgroundColor: 'rgba(214,69,69,0.1)',
+          borderWidth: 1,
+          pointRadius: 2,
+          tension: 0.3
+        },
+        {
+          label: `Moyenne mobile 10 ans (${d1.commune})`,
+          data: mobile1,
+          borderColor: '#E8A33D',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3
+        },
+        {
+          label: `Moyenne mobile 10 ans (${d2.commune})`,
+          data: mobile2,
+          borderColor: '#E8A33D',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+          borderDash: [5, 5]
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true, labels: { color: '#8FA0B8' } } },
+      scales: {
+        x: { ticks: { color: '#8FA0B8', maxTicksLimit: 12 }, grid: { color: '#1A2436' } },
+        y: { ticks: { color: '#8FA0B8' }, grid: { color: '#1A2436' } }
+      }
+    },
+    plugins: [bandesPlugin]
+  });
+}
+
+function construireGraphExtremesComparaison(d1, d2, annee) {
+  const ref = fenetrePersonnelle(annee, d1.annees[0].annee, d1.annees[d1.annees.length - 1].annee);
+  const cles = ['jours_chauds_25','jours_chauds_30','nuits_tropicales','jours_gel','jours_vague_chaleur'];
+  const labels = ['Jours >25°C','Jours >30°C','Nuits tropicales','Jours de gel','Jours canicule'];
+  const data1 = cles.map(c => moyennePeriode(d1.annees, c, ref.start, ref.end));
+  const data2 = cles.map(c => moyennePeriode(d2.annees, c, ref.start, ref.end));
+
+  if(charts['extremes-comparaison']) charts['extremes-comparaison'].destroy();
+  charts['extremes-comparaison'] = new Chart(document.getElementById('graph-extremes-comparaison'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: d1.commune, data: data1, backgroundColor: 'rgba(62,124,177,0.7)' },
+        { label: d2.commune, data: data2, backgroundColor: 'rgba(214,69,69,0.7)' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#8FA0B8' } } },
+      scales: {
+        x: { ticks: { color: '#8FA0B8' }, grid: { display: false } },
+        y: { ticks: { color: '#8FA0B8' }, grid: { color: '#1A2436' }, title: { display: true, text: 'jours / an en moyenne', color: '#8FA0B8' } }
+      }
+    }
+  });
+}
+
+// ============ DÉMARRAGE ============
+init();
