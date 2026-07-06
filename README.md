@@ -5,7 +5,7 @@ naissance + ville) déclenche un récit qui se construit au scroll, comparant
 la **période de référence personnelle** de l'utilisateur·rice (30 ans
 centrés sur sa naissance, calée sur les données disponibles) à la
 **normale climatique actuelle** (les 30 dernières années disponibles,
-1995–2024 avec les données livrées).
+1995–2023 avec les données livrées).
 
 Inspiré du format de RTBF sur le même sujet
 (a-quel-point-fait-il-plus-chaud-dans-votre-commune-depuis-votre-naissance-faites-le-test)
@@ -17,20 +17,14 @@ moyenne mobile 10 ans pour les indicateurs vedettes.
 ```
 index.html                          → le site (HTML + CSS + JS, un seul fichier)
 data/communes.json                  → correspondance commune → station (menu déroulant)
-data/entzheim.json                  → stats annuelles station Strasbourg-Entzheim (DONNÉES D'EXEMPLE)
-data/marignane.json                 → stats annuelles station Marignane (DONNÉES D'EXEMPLE)
+data/"nom commune".json                  → stats annuelles par station
 scripts/generer_donnees_climat.py   → script Python pour générer les vrais JSON par station
 ```
 
-⚠️ **Les fichiers `data/entzheim.json` et `data/marignane.json` livrés
-contiennent des données d'exemple générées aléatoirement** (tendance de
-réchauffement plausible mais inventée), juste pour que le site fonctionne
-tout de suite. À remplacer par tes vraies données avant publication.
 
 ## Pourquoi "commune → station" et pas "ville → fichier" ?
 
-Météo-France n'a une station que dans certaines communes (une par grande
-agglomération environ). Pour proposer un choix réaliste de communes dans le
+Météo-France n'a une station températures que dans certaines communes. Pour proposer un choix réaliste de communes dans le
 menu déroulant — y compris celles sans station — chaque commune est
 rattachée dans `data/communes.json` à la **station la plus proche**, dont
 les données sont utilisées comme approximation. Le site l'indique
@@ -157,7 +151,7 @@ section sans toucher au reste du site.
 
 ## Pistes d'évolution possibles
 
-- Ajouter une carte de France avec les communes disponibles cliquables.
+- Renforcer le scrolytelling
 - Comparer deux communes côte à côte.
 - Ajouter les précipitations (jours de fortes pluies, sécheresse).
 - Export du graphique en image (via `canvas.toDataURL()` sur les graphiques Chart.js).
