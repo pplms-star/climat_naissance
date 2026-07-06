@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le climat a-t-il changé depuis ta naissance ?</title>
+<title>Comment le climat a évolué depuis votre naissance sur le territoire où vous êtes né ?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -37,6 +37,36 @@
   /* ---------- reveal on scroll ---------- */
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
   .reveal.visible{opacity:1;transform:translateY(0);}
+
+  var handleItemFocus = function(event, item) {
+	var step = item.data.step
+	graphic.update(step)
+}	
+
+var handleContainerScroll = function(event) {
+	var bottom = false
+	var fixed = false
+
+	var bb = $graphicEl[0].getBoundingClientRect()
+	var bottomFromTop = bb.bottom - viewportHeight
+
+	if (bb.top < 0 && bottomFromTop > 0) {
+		bottom = false
+		fixed = true
+	} else if (bb.top < 0 && bottomFromTop < 0) {
+		bottom = true
+		fixed = false
+	}
+
+	toggle(fixed, bottom)
+}
+
+$graphicEl.scrollStory({
+	contentSelector: '.trigger',
+	triggerOffset: halfViewportHeight,
+	itemfocus: handleItemFocus,
+	containerscroll: handleContainerScroll,
+})
 
   /* ---------- HERO ---------- */
   header.hero{padding:72px 0 8px;}
