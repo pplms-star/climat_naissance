@@ -1,0 +1,286 @@
+{
+  "station": "Selestat",
+  "periode_reference": "1976-2005",
+  "source": "Météo-France",
+  "comparaison": {
+    "type": "variable"
+  },
+  "projections": null,
+  "annees": [
+    {
+      "annee": 1963,
+      "tx_moy": null,
+      "tn_moy": null,
+      "ete_tm_moy": null,
+      "jours_chauds_25": 0,
+      "jours_chauds_30": 0,
+      "nuits_tropicales": 0,
+      "jours_gel": 0,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1964,
+      "tx_moy": 14.88,
+      "tn_moy": 4.47,
+      "ete_tm_moy": 19.23,
+      "jours_chauds_25": 73,
+      "jours_chauds_30": 31,
+      "nuits_tropicales": 0,
+      "jours_gel": 95,
+      "jours_vague_chaleur": 11
+    },
+    {
+      "annee": 1965,
+      "tx_moy": 13.92,
+      "tn_moy": 4.08,
+      "ete_tm_moy": 17.19,
+      "jours_chauds_25": 43,
+      "jours_chauds_30": 8,
+      "nuits_tropicales": 0,
+      "jours_gel": 95,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1966,
+      "tx_moy": 14.85,
+      "tn_moy": 4.82,
+      "ete_tm_moy": 17.22,
+      "jours_chauds_25": 50,
+      "jours_chauds_30": 11,
+      "nuits_tropicales": 0,
+      "jours_gel": 79,
+      "jours_vague_chaleur": 17
+    },
+    {
+      "annee": 1967,
+      "tx_moy": 15.24,
+      "tn_moy": 4.27,
+      "ete_tm_moy": 18.21,
+      "jours_chauds_25": 56,
+      "jours_chauds_30": 17,
+      "nuits_tropicales": 0,
+      "jours_gel": 93,
+      "jours_vague_chaleur": 18
+    },
+    {
+      "annee": 1968,
+      "tx_moy": 13.98,
+      "tn_moy": 4.1,
+      "ete_tm_moy": 17.25,
+      "jours_chauds_25": 40,
+      "jours_chauds_30": 4,
+      "nuits_tropicales": 0,
+      "jours_gel": 103,
+      "jours_vague_chaleur": 16
+    },
+    {
+      "annee": 1969,
+      "tx_moy": 14.28,
+      "tn_moy": 4.33,
+      "ete_tm_moy": 17.52,
+      "jours_chauds_25": 61,
+      "jours_chauds_30": 14,
+      "nuits_tropicales": 0,
+      "jours_gel": 92,
+      "jours_vague_chaleur": 11
+    },
+    {
+      "annee": 1970,
+      "tx_moy": 13.46,
+      "tn_moy": 4.72,
+      "ete_tm_moy": 18.11,
+      "jours_chauds_25": 39,
+      "jours_chauds_30": 9,
+      "nuits_tropicales": 0,
+      "jours_gel": 105,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1971,
+      "tx_moy": 15.49,
+      "tn_moy": 5.08,
+      "ete_tm_moy": 18.77,
+      "jours_chauds_25": 62,
+      "jours_chauds_30": 22,
+      "nuits_tropicales": 0,
+      "jours_gel": 76,
+      "jours_vague_chaleur": 26
+    },
+    {
+      "annee": 1972,
+      "tx_moy": 14.25,
+      "tn_moy": 5.34,
+      "ete_tm_moy": 18.33,
+      "jours_chauds_25": 41,
+      "jours_chauds_30": 12,
+      "nuits_tropicales": 0,
+      "jours_gel": 68,
+      "jours_vague_chaleur": 22
+    },
+    {
+      "annee": 1973,
+      "tx_moy": 14.81,
+      "tn_moy": 5.78,
+      "ete_tm_moy": 19.9,
+      "jours_chauds_25": 72,
+      "jours_chauds_30": 25,
+      "nuits_tropicales": 0,
+      "jours_gel": 89,
+      "jours_vague_chaleur": 28
+    },
+    {
+      "annee": 1974,
+      "tx_moy": 15.63,
+      "tn_moy": 7.09,
+      "ete_tm_moy": 18.85,
+      "jours_chauds_25": 56,
+      "jours_chauds_30": 10,
+      "nuits_tropicales": 0,
+      "jours_gel": 29,
+      "jours_vague_chaleur": 48
+    },
+    {
+      "annee": 1975,
+      "tx_moy": 14.85,
+      "tn_moy": 6.29,
+      "ete_tm_moy": 19.26,
+      "jours_chauds_25": 54,
+      "jours_chauds_30": 17,
+      "nuits_tropicales": 1,
+      "jours_gel": 75,
+      "jours_vague_chaleur": 21
+    },
+    {
+      "annee": 1976,
+      "tx_moy": 14.63,
+      "tn_moy": 5.54,
+      "ete_tm_moy": 19.07,
+      "jours_chauds_25": 56,
+      "jours_chauds_30": 23,
+      "nuits_tropicales": 2,
+      "jours_gel": 81,
+      "jours_vague_chaleur": 19
+    },
+    {
+      "annee": 1977,
+      "tx_moy": 14.76,
+      "tn_moy": 6.75,
+      "ete_tm_moy": 18.8,
+      "jours_chauds_25": 40,
+      "jours_chauds_30": 5,
+      "nuits_tropicales": 0,
+      "jours_gel": 58,
+      "jours_vague_chaleur": 18
+    },
+    {
+      "annee": 1978,
+      "tx_moy": 13.53,
+      "tn_moy": 5.44,
+      "ete_tm_moy": 18.27,
+      "jours_chauds_25": 49,
+      "jours_chauds_30": 7,
+      "nuits_tropicales": 0,
+      "jours_gel": 62,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1979,
+      "tx_moy": 14.73,
+      "tn_moy": 6.86,
+      "ete_tm_moy": 19.3,
+      "jours_chauds_25": 64,
+      "jours_chauds_30": 10,
+      "nuits_tropicales": 0,
+      "jours_gel": 47,
+      "jours_vague_chaleur": 15
+    },
+    {
+      "annee": 1980,
+      "tx_moy": 13.9,
+      "tn_moy": 5.35,
+      "ete_tm_moy": 17.69,
+      "jours_chauds_25": 34,
+      "jours_chauds_30": 6,
+      "nuits_tropicales": 0,
+      "jours_gel": 83,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1981,
+      "tx_moy": 15.21,
+      "tn_moy": 6.08,
+      "ete_tm_moy": 18.89,
+      "jours_chauds_25": 57,
+      "jours_chauds_30": 14,
+      "nuits_tropicales": 2,
+      "jours_gel": 82,
+      "jours_vague_chaleur": 18
+    },
+    {
+      "annee": 1982,
+      "tx_moy": 15.39,
+      "tn_moy": 6.32,
+      "ete_tm_moy": 19.65,
+      "jours_chauds_25": 71,
+      "jours_chauds_30": 18,
+      "nuits_tropicales": 2,
+      "jours_gel": 57,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1983,
+      "tx_moy": 15.61,
+      "tn_moy": 6.45,
+      "ete_tm_moy": 21.38,
+      "jours_chauds_25": 80,
+      "jours_chauds_30": 28,
+      "nuits_tropicales": 8,
+      "jours_gel": 79,
+      "jours_vague_chaleur": 26
+    },
+    {
+      "annee": 1984,
+      "tx_moy": 14.11,
+      "tn_moy": 5.38,
+      "ete_tm_moy": 18.29,
+      "jours_chauds_25": 41,
+      "jours_chauds_30": 10,
+      "nuits_tropicales": 0,
+      "jours_gel": 78,
+      "jours_vague_chaleur": 0
+    },
+    {
+      "annee": 1985,
+      "tx_moy": 14.63,
+      "tn_moy": 5.2,
+      "ete_tm_moy": 18.78,
+      "jours_chauds_25": 62,
+      "jours_chauds_30": 16,
+      "nuits_tropicales": 2,
+      "jours_gel": 97,
+      "jours_vague_chaleur": 7
+    },
+    {
+      "annee": 1986,
+      "tx_moy": 14.47,
+      "tn_moy": 5.96,
+      "ete_tm_moy": 19.09,
+      "jours_chauds_25": 61,
+      "jours_chauds_30": 15,
+      "nuits_tropicales": 2,
+      "jours_gel": 74,
+      "jours_vague_chaleur": 7
+    },
+    {
+      "annee": 1987,
+      "tx_moy": 15.5,
+      "tn_moy": 6.83,
+      "ete_tm_moy": 18.43,
+      "jours_chauds_25": 44,
+      "jours_chauds_30": 13,
+      "nuits_tropicales": 2,
+      "jours_gel": 57,
+      "jours_vague_chaleur": 17
+    }
+  ]
+}
