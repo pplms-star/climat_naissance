@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="data/communes.json" id="communes-data" type="application/json"></script>
 <style>
   :root{
     --bg:#0B1220;
@@ -468,20 +469,12 @@ const ANNEE_MIN = 1955, ANNEE_MAX = 2010;
 let charts = {};
 
 // ============ Init ============
-let COMMUNES = null, STATIONS = null;
-
-async function init(){
-  const inputAnnee = document.getElementById('annee');
-  document.getElementById('annee-affichee').textContent = inputAnnee.value;
-
-  try{
-    const res = await fetch('data/communes.json');
-    const index = await res.json();
-    COMMUNES = index.communes;
-    STATIONS = index.stations;
-  }catch(e){
-    console.error(e);
-  }
+const communesData = document.getElementById('communes-data');
+if (communesData) {
+  const index = JSON.parse(communesData.textContent);
+  COMMUNES = index.communes;
+  STATIONS = index.stations;
+}
 
   dessinerStripesDecor();
   configurerAutocompleteCommune('commune-recherche', 'commune', 'commune-suggestions',
