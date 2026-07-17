@@ -21,21 +21,6 @@
       "distance_km": 1.8
     },
     {
-      "commune": "Sommerau",
-      "station_id": "safran-1726",
-      "distance_km": 1.8
-    },
-    {
-      "commune": "Sommerau",
-      "station_id": "safran-1726",
-      "distance_km": 1.8
-    },
-    {
-      "commune": "Sommerau",
-      "station_id": "safran-1726",
-      "distance_km": 1.8
-    },
-    {
       "commune": "Alteckendorf",
       "station_id": "safran-1503",
       "distance_km": 2.4
@@ -171,21 +156,6 @@
       "distance_km": 3.2
     },
     {
-      "commune": "Berstett",
-      "station_id": "safran-1612",
-      "distance_km": 3.2
-    },
-    {
-      "commune": "Berstett",
-      "station_id": "safran-1612",
-      "distance_km": 3.2
-    },
-    {
-      "commune": "Berstett",
-      "station_id": "safran-1612",
-      "distance_km": 3.2
-    },
-    {
       "commune": "Berstheim",
       "station_id": "safran-1504",
       "distance_km": 4.0
@@ -266,11 +236,6 @@
       "distance_km": 3.8
     },
     {
-      "commune": "Bœrsch",
-      "station_id": "safran-1973",
-      "distance_km": 3.8
-    },
-    {
       "commune": "Bœsenbiesen",
       "station_id": "safran-2464",
       "distance_km": 2.5
@@ -306,29 +271,9 @@
       "distance_km": 0.8
     },
     {
-      "commune": "Bourg-Bruche",
-      "station_id": "safran-2216",
-      "distance_km": 0.8
-    },
-    {
       "commune": "Bourgheim",
       "station_id": "safran-2097",
       "distance_km": 1.3
-    },
-    {
-      "commune": "Bouxwiller",
-      "station_id": "safran-1502",
-      "distance_km": 5.0
-    },
-    {
-      "commune": "Bouxwiller",
-      "station_id": "safran-1502",
-      "distance_km": 5.0
-    },
-    {
-      "commune": "Bouxwiller",
-      "station_id": "safran-1502",
-      "distance_km": 5.0
     },
     {
       "commune": "Bouxwiller",
@@ -349,26 +294,6 @@
       "commune": "Breuschwickersheim",
       "station_id": "safran-1851",
       "distance_km": 1.8
-    },
-    {
-      "commune": "Broque",
-      "station_id": "safran-2094",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Broque",
-      "station_id": "safran-2094",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Broque",
-      "station_id": "safran-2094",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Broque",
-      "station_id": "safran-2094",
-      "distance_km": 3.0
     },
     {
       "commune": "Broque",
@@ -409,11 +334,6 @@
       "commune": "Châtenois",
       "station_id": "safran-2340",
       "distance_km": 2.6
-    },
-    {
-      "commune": "Cleebourg",
-      "station_id": "safran-1212",
-      "distance_km": 2.5
     },
     {
       "commune": "Cleebourg",
@@ -466,11 +386,6 @@
       "distance_km": 1.8
     },
     {
-      "commune": "Dambach",
-      "station_id": "safran-1210",
-      "distance_km": 1.8
-    },
-    {
       "commune": "Dambach-la-Ville",
       "station_id": "safran-2219",
       "distance_km": 4.3
@@ -484,11 +399,6 @@
       "commune": "Daubensand",
       "station_id": "safran-2221",
       "distance_km": 3.6
-    },
-    {
-      "commune": "Dauendorf",
-      "station_id": "safran-1400",
-      "distance_km": 3.5
     },
     {
       "commune": "Dauendorf",
@@ -581,11 +491,6 @@
       "distance_km": 1.6
     },
     {
-      "commune": "Drachenbronn-Birlenbach",
-      "station_id": "safran-1212",
-      "distance_km": 1.6
-    },
-    {
       "commune": "Drulingen",
       "station_id": "safran-1396",
       "distance_km": 0.4
@@ -671,26 +576,6 @@
       "distance_km": 3.6
     },
     {
-      "commune": "Wangenbourg-Engenthal",
-      "station_id": "safran-1725",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Wangenbourg-Engenthal",
-      "station_id": "safran-1725",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Wangenbourg-Engenthal",
-      "station_id": "safran-1725",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Wangenbourg-Engenthal",
-      "station_id": "safran-1725",
-      "distance_km": 3.6
-    },
-    {
       "commune": "Engwiller",
       "station_id": "safran-1400",
       "distance_km": 3.6
@@ -731,11 +616,6 @@
       "distance_km": 0.8
     },
     {
-      "commune": "Erstein",
-      "station_id": "safran-2099",
-      "distance_km": 0.8
-    },
-    {
       "commune": "Eschau",
       "station_id": "safran-1976",
       "distance_km": 2.5
@@ -769,11 +649,6 @@
       "commune": "Eywiller",
       "station_id": "safran-1395",
       "distance_km": 3.2
-    },
-    {
-      "commune": "Fegersheim",
-      "station_id": "safran-1976",
-      "distance_km": 1.4
     },
     {
       "commune": "Fegersheim",
@@ -886,11 +761,6 @@
       "distance_km": 3.8
     },
     {
-      "commune": "Gœrsdorf",
-      "station_id": "safran-1211",
-      "distance_km": 3.8
-    },
-    {
       "commune": "Gottenhouse",
       "station_id": "safran-1610",
       "distance_km": 2.6
@@ -956,21 +826,6 @@
       "distance_km": 4.0
     },
     {
-      "commune": "Gundershoffen",
-      "station_id": "safran-1300",
-      "distance_km": 4.0
-    },
-    {
-      "commune": "Gundershoffen",
-      "station_id": "safran-1300",
-      "distance_km": 4.0
-    },
-    {
-      "commune": "Gundershoffen",
-      "station_id": "safran-1300",
-      "distance_km": 4.0
-    },
-    {
       "commune": "Gunstett",
       "station_id": "safran-1301",
       "distance_km": 2.8
@@ -984,16 +839,6 @@
       "commune": "Haegen",
       "station_id": "safran-1609",
       "distance_km": 1.9
-    },
-    {
-      "commune": "Haguenau",
-      "station_id": "safran-1402",
-      "distance_km": 0.9
-    },
-    {
-      "commune": "Haguenau",
-      "station_id": "safran-1402",
-      "distance_km": 0.9
     },
     {
       "commune": "Haguenau",
@@ -1126,16 +971,6 @@
       "distance_km": 3.5
     },
     {
-      "commune": "Hoffen",
-      "station_id": "safran-1303",
-      "distance_km": 3.5
-    },
-    {
-      "commune": "Hoffen",
-      "station_id": "safran-1303",
-      "distance_km": 3.5
-    },
-    {
       "commune": "Hohengœft",
       "station_id": "safran-1727",
       "distance_km": 3.1
@@ -1219,16 +1054,6 @@
       "commune": "Itterswiller",
       "station_id": "safran-2219",
       "distance_km": 3.1
-    },
-    {
-      "commune": "Neugartheim-Ittlenheim",
-      "station_id": "safran-1727",
-      "distance_km": 4.0
-    },
-    {
-      "commune": "Neugartheim-Ittlenheim",
-      "station_id": "safran-1727",
-      "distance_km": 4.0
     },
     {
       "commune": "Neugartheim-Ittlenheim",
@@ -1356,16 +1181,6 @@
       "distance_km": 3.0
     },
     {
-      "commune": "Kutzenhausen",
-      "station_id": "safran-1302",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Lalaye",
-      "station_id": "safran-2217",
-      "distance_km": 2.8
-    },
-    {
       "commune": "Lalaye",
       "station_id": "safran-2217",
       "distance_km": 2.8
@@ -1399,11 +1214,6 @@
       "commune": "Lauterbourg",
       "station_id": "safran-1215",
       "distance_km": 0.5
-    },
-    {
-      "commune": "Lembach",
-      "station_id": "safran-1211",
-      "distance_km": 3.1
     },
     {
       "commune": "Lembach",
@@ -1496,11 +1306,6 @@
       "distance_km": 1.1
     },
     {
-      "commune": "Maisonsgoutte",
-      "station_id": "safran-2217",
-      "distance_km": 1.1
-    },
-    {
       "commune": "Marckolsheim",
       "station_id": "safran-2591",
       "distance_km": 2.0
@@ -1514,11 +1319,6 @@
       "commune": "Marmoutier",
       "station_id": "safran-1610",
       "distance_km": 2.9
-    },
-    {
-      "commune": "Matzenheim",
-      "station_id": "safran-2099",
-      "distance_km": 5.2
     },
     {
       "commune": "Matzenheim",
@@ -1544,11 +1344,6 @@
       "commune": "Menchhoffen",
       "station_id": "safran-1399",
       "distance_km": 1.6
-    },
-    {
-      "commune": "Merkwiller-Pechelbronn",
-      "station_id": "safran-1302",
-      "distance_km": 2.4
     },
     {
       "commune": "Merkwiller-Pechelbronn",
@@ -1651,11 +1446,6 @@
       "distance_km": 2.6
     },
     {
-      "commune": "Muttersholtz",
-      "station_id": "safran-2342",
-      "distance_km": 2.6
-    },
-    {
       "commune": "Mutzenhouse",
       "station_id": "safran-1612",
       "distance_km": 4.1
@@ -1689,11 +1479,6 @@
       "commune": "Neuve-Église",
       "station_id": "safran-2218",
       "distance_km": 4.9
-    },
-    {
-      "commune": "Neuviller-la-Roche",
-      "station_id": "safran-2095",
-      "distance_km": 0.6
     },
     {
       "commune": "Neuviller-la-Roche",
@@ -1781,21 +1566,6 @@
       "distance_km": 3.0
     },
     {
-      "commune": "Betschdorf",
-      "station_id": "safran-1303",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Betschdorf",
-      "station_id": "safran-1303",
-      "distance_km": 3.0
-    },
-    {
-      "commune": "Betschdorf",
-      "station_id": "safran-1303",
-      "distance_km": 3.0
-    },
-    {
       "commune": "Oberbronn",
       "station_id": "safran-1300",
       "distance_km": 3.2
@@ -1826,24 +1596,9 @@
       "distance_km": 4.1
     },
     {
-      "commune": "Oberhoffen-sur-Moder",
-      "station_id": "safran-1505",
-      "distance_km": 4.1
-    },
-    {
       "commune": "Oberlauterbach",
       "station_id": "safran-1214",
       "distance_km": 3.2
-    },
-    {
-      "commune": "Obermodern-Zutzendorf",
-      "station_id": "safran-1399",
-      "distance_km": 1.9
-    },
-    {
-      "commune": "Obermodern-Zutzendorf",
-      "station_id": "safran-1399",
-      "distance_km": 1.9
     },
     {
       "commune": "Obermodern-Zutzendorf",
@@ -1864,16 +1619,6 @@
       "commune": "Oberschaeffolsheim",
       "station_id": "safran-1851",
       "distance_km": 4.9
-    },
-    {
-      "commune": "Seebach",
-      "station_id": "safran-1213",
-      "distance_km": 2.4
-    },
-    {
-      "commune": "Seebach",
-      "station_id": "safran-1213",
-      "distance_km": 2.4
     },
     {
       "commune": "Seebach",
@@ -1909,11 +1654,6 @@
       "commune": "Offwiller",
       "station_id": "safran-1299",
       "distance_km": 1.7
-    },
-    {
-      "commune": "Ohlungen",
-      "station_id": "safran-1401",
-      "distance_km": 4.6
     },
     {
       "commune": "Ohlungen",
@@ -1986,16 +1726,6 @@
       "distance_km": 2.0
     },
     {
-      "commune": "Val de Moder",
-      "station_id": "safran-1400",
-      "distance_km": 2.0
-    },
-    {
-      "commune": "Val de Moder",
-      "station_id": "safran-1400",
-      "distance_km": 2.0
-    },
-    {
       "commune": "Pfalzweyer",
       "station_id": "safran-1500",
       "distance_km": 3.0
@@ -2004,16 +1734,6 @@
       "commune": "Pfulgriesheim",
       "station_id": "safran-1729",
       "distance_km": 3.7
-    },
-    {
-      "commune": "Plaine",
-      "station_id": "safran-2094",
-      "distance_km": 1.8
-    },
-    {
-      "commune": "Plaine",
-      "station_id": "safran-2094",
-      "distance_km": 1.8
     },
     {
       "commune": "Plaine",
@@ -2076,11 +1796,6 @@
       "distance_km": 3.6
     },
     {
-      "commune": "Reichshoffen",
-      "station_id": "safran-1300",
-      "distance_km": 3.6
-    },
-    {
       "commune": "Reichstett",
       "station_id": "safran-1729",
       "distance_km": 3.9
@@ -2129,11 +1844,6 @@
       "commune": "Rimsdorf",
       "station_id": "safran-1295",
       "distance_km": 2.8
-    },
-    {
-      "commune": "Ringeldorf",
-      "station_id": "safran-1400",
-      "distance_km": 2.7
     },
     {
       "commune": "Ringendorf",
@@ -2221,16 +1931,6 @@
       "distance_km": 2.2
     },
     {
-      "commune": "Russ",
-      "station_id": "safran-1972",
-      "distance_km": 2.2
-    },
-    {
-      "commune": "Russ",
-      "station_id": "safran-1972",
-      "distance_km": 2.2
-    },
-    {
       "commune": "Saales",
       "station_id": "safran-2216",
       "distance_km": 2.9
@@ -2281,11 +1981,6 @@
       "distance_km": 2.4
     },
     {
-      "commune": "Saint-Pierre-Bois",
-      "station_id": "safran-2218",
-      "distance_km": 2.4
-    },
-    {
       "commune": "Salmbach",
       "station_id": "safran-1214",
       "distance_km": 0.5
@@ -2306,29 +2001,9 @@
       "distance_km": 3.9
     },
     {
-      "commune": "Sarrewerden",
-      "station_id": "safran-1395",
-      "distance_km": 3.9
-    },
-    {
-      "commune": "Sarrewerden",
-      "station_id": "safran-1395",
-      "distance_km": 3.9
-    },
-    {
       "commune": "Saulxures",
       "station_id": "safran-2216",
       "distance_km": 3.3
-    },
-    {
-      "commune": "Saverne",
-      "station_id": "safran-1610",
-      "distance_km": 4.6
-    },
-    {
-      "commune": "Saverne",
-      "station_id": "safran-1610",
-      "distance_km": 4.6
     },
     {
       "commune": "Saverne",
@@ -2361,11 +2036,6 @@
       "distance_km": 2.5
     },
     {
-      "commune": "Scharrachbergheim-Irmstett",
-      "station_id": "safran-1850",
-      "distance_km": 2.5
-    },
-    {
       "commune": "Scheibenhard",
       "station_id": "safran-1215",
       "distance_km": 2.9
@@ -2374,11 +2044,6 @@
       "commune": "Scherlenheim",
       "station_id": "safran-1502",
       "distance_km": 2.6
-    },
-    {
-      "commune": "Scherwiller",
-      "station_id": "safran-2341",
-      "distance_km": 3.6
     },
     {
       "commune": "Scherwiller",
@@ -2401,11 +2066,6 @@
       "distance_km": 3.6
     },
     {
-      "commune": "Schirmeck",
-      "station_id": "safran-1971",
-      "distance_km": 3.6
-    },
-    {
       "commune": "Schirrhein",
       "station_id": "safran-1506",
       "distance_km": 4.1
@@ -2419,16 +2079,6 @@
       "commune": "Schleithal",
       "station_id": "safran-1214",
       "distance_km": 3.4
-    },
-    {
-      "commune": "Schnersheim",
-      "station_id": "safran-1728",
-      "distance_km": 3.8
-    },
-    {
-      "commune": "Schnersheim",
-      "station_id": "safran-1728",
-      "distance_km": 3.8
     },
     {
       "commune": "Schnersheim",
@@ -2536,11 +2186,6 @@
       "distance_km": 4.2
     },
     {
-      "commune": "Soultz-sous-Forêts",
-      "station_id": "safran-1302",
-      "distance_km": 4.2
-    },
-    {
       "commune": "Sparsbach",
       "station_id": "safran-1398",
       "distance_km": 2.3
@@ -2581,16 +2226,6 @@
       "distance_km": 4.9
     },
     {
-      "commune": "Strasbourg",
-      "station_id": "safran-1852",
-      "distance_km": 4.9
-    },
-    {
-      "commune": "Strasbourg",
-      "station_id": "safran-1852",
-      "distance_km": 4.9
-    },
-    {
       "commune": "Struth",
       "station_id": "safran-1397",
       "distance_km": 4.1
@@ -2599,11 +2234,6 @@
       "commune": "Stundwiller",
       "station_id": "safran-1303",
       "distance_km": 3.4
-    },
-    {
-      "commune": "Stutzheim-Offenheim",
-      "station_id": "safran-1728",
-      "distance_km": 2.0
     },
     {
       "commune": "Stutzheim-Offenheim",
@@ -2624,16 +2254,6 @@
       "commune": "Thal-Drulingen",
       "station_id": "safran-1295",
       "distance_km": 5.1
-    },
-    {
-      "commune": "Thal-Marmoutier",
-      "station_id": "safran-1610",
-      "distance_km": 4.4
-    },
-    {
-      "commune": "Thal-Marmoutier",
-      "station_id": "safran-1610",
-      "distance_km": 4.4
     },
     {
       "commune": "Thal-Marmoutier",
@@ -2669,21 +2289,6 @@
       "commune": "Truchtersheim",
       "station_id": "safran-1728",
       "distance_km": 2.6
-    },
-    {
-      "commune": "Truchtersheim",
-      "station_id": "safran-1728",
-      "distance_km": 2.6
-    },
-    {
-      "commune": "Truchtersheim",
-      "station_id": "safran-1728",
-      "distance_km": 2.6
-    },
-    {
-      "commune": "Uhlwiller",
-      "station_id": "safran-1400",
-      "distance_km": 4.9
     },
     {
       "commune": "Uhlwiller",
@@ -2796,11 +2401,6 @@
       "distance_km": 3.8
     },
     {
-      "commune": "Wasselonne",
-      "station_id": "safran-1727",
-      "distance_km": 3.8
-    },
-    {
       "commune": "Weinbourg",
       "station_id": "safran-1398",
       "distance_km": 2.8
@@ -2851,19 +2451,9 @@
       "distance_km": 1.8
     },
     {
-      "commune": "Wickersheim-Wilshausen",
-      "station_id": "safran-1502",
-      "distance_km": 1.8
-    },
-    {
       "commune": "Wildersbach",
       "station_id": "safran-2095",
       "distance_km": 2.5
-    },
-    {
-      "commune": "Willgottheim",
-      "station_id": "safran-1727",
-      "distance_km": 4.1
     },
     {
       "commune": "Willgottheim",
@@ -2886,16 +2476,6 @@
       "distance_km": 3.8
     },
     {
-      "commune": "Windstein",
-      "station_id": "safran-1211",
-      "distance_km": 3.8
-    },
-    {
-      "commune": "Wingen",
-      "station_id": "safran-1212",
-      "distance_km": 6.9
-    },
-    {
       "commune": "Wingen",
       "station_id": "safran-1212",
       "distance_km": 6.9
@@ -2904,21 +2484,6 @@
       "commune": "Wingen-sur-Moder",
       "station_id": "safran-1298",
       "distance_km": 3.3
-    },
-    {
-      "commune": "Wingersheim les Quatre Bans",
-      "station_id": "safran-1612",
-      "distance_km": 3.4
-    },
-    {
-      "commune": "Wingersheim les Quatre Bans",
-      "station_id": "safran-1612",
-      "distance_km": 3.4
-    },
-    {
-      "commune": "Wingersheim les Quatre Bans",
-      "station_id": "safran-1612",
-      "distance_km": 3.4
     },
     {
       "commune": "Wingersheim les Quatre Bans",
@@ -2946,26 +2511,6 @@
       "distance_km": 3.6
     },
     {
-      "commune": "Wisches",
-      "station_id": "safran-1972",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Wisches",
-      "station_id": "safran-1972",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Wissembourg",
-      "station_id": "safran-1213",
-      "distance_km": 4.5
-    },
-    {
-      "commune": "Wissembourg",
-      "station_id": "safran-1213",
-      "distance_km": 4.5
-    },
-    {
       "commune": "Wissembourg",
       "station_id": "safran-1213",
       "distance_km": 4.5
@@ -2974,11 +2519,6 @@
       "commune": "Witternheim",
       "station_id": "safran-2220",
       "distance_km": 5.0
-    },
-    {
-      "commune": "Wittersheim",
-      "station_id": "safran-1503",
-      "distance_km": 2.8
     },
     {
       "commune": "Wittisheim",
@@ -3071,11 +2611,6 @@
       "distance_km": 3.7
     },
     {
-      "commune": "Ammerschwihr",
-      "station_id": "safran-2588",
-      "distance_km": 3.7
-    },
-    {
       "commune": "Bernwiller",
       "station_id": "safran-3363",
       "distance_km": 3.0
@@ -3146,11 +2681,6 @@
       "distance_km": 3.7
     },
     {
-      "commune": "Balschwiller",
-      "station_id": "safran-3489",
-      "distance_km": 3.7
-    },
-    {
       "commune": "Baltzenheim",
       "station_id": "safran-2591",
       "distance_km": 3.7
@@ -3159,11 +2689,6 @@
       "commune": "Bantzenheim",
       "station_id": "safran-3112",
       "distance_km": 3.0
-    },
-    {
-      "commune": "Bartenheim",
-      "station_id": "safran-3492",
-      "distance_km": 1.3
     },
     {
       "commune": "Bartenheim",
@@ -3189,11 +2714,6 @@
       "commune": "Bendorf",
       "station_id": "safran-3737",
       "distance_km": 1.2
-    },
-    {
-      "commune": "Bennwihr",
-      "station_id": "safran-2589",
-      "distance_km": 0.3
     },
     {
       "commune": "Bennwihr",
@@ -3336,11 +2856,6 @@
       "distance_km": 2.3
     },
     {
-      "commune": "Brunstatt-Didenheim",
-      "station_id": "safran-3364",
-      "distance_km": 2.3
-    },
-    {
       "commune": "Buethwiller",
       "station_id": "safran-3489",
       "distance_km": 4.1
@@ -3461,11 +2976,6 @@
       "distance_km": 2.9
     },
     {
-      "commune": "Saint-Bernard",
-      "station_id": "safran-3489",
-      "distance_km": 2.9
-    },
-    {
       "commune": "Ensisheim",
       "station_id": "safran-3111",
       "distance_km": 3.4
@@ -3499,11 +3009,6 @@
       "commune": "Feldkirch",
       "station_id": "safran-3110",
       "distance_km": 2.8
-    },
-    {
-      "commune": "Fellering",
-      "station_id": "safran-2974",
-      "distance_km": 3.9
     },
     {
       "commune": "Fellering",
@@ -3589,11 +3094,6 @@
       "commune": "Gildwiller",
       "station_id": "safran-3363",
       "distance_km": 4.3
-    },
-    {
-      "commune": "Goldbach-Altenbach",
-      "station_id": "safran-3108",
-      "distance_km": 1.9
     },
     {
       "commune": "Goldbach-Altenbach",
@@ -3776,19 +3276,9 @@
       "distance_km": 3.0
     },
     {
-      "commune": "Porte du Ried",
-      "station_id": "safran-2590",
-      "distance_km": 3.0
-    },
-    {
       "commune": "Hombourg",
       "station_id": "safran-3240",
       "distance_km": 2.7
-    },
-    {
-      "commune": "Horbourg-Wihr",
-      "station_id": "safran-2720",
-      "distance_km": 3.2
     },
     {
       "commune": "Horbourg-Wihr",
@@ -3841,11 +3331,6 @@
       "distance_km": 3.8
     },
     {
-      "commune": "Illzach",
-      "station_id": "safran-3239",
-      "distance_km": 3.8
-    },
-    {
       "commune": "Ingersheim",
       "station_id": "safran-2719",
       "distance_km": 3.8
@@ -3884,21 +3369,6 @@
       "commune": "Kaysersberg Vignoble",
       "station_id": "safran-2588",
       "distance_km": 1.1
-    },
-    {
-      "commune": "Kaysersberg Vignoble",
-      "station_id": "safran-2588",
-      "distance_km": 1.1
-    },
-    {
-      "commune": "Kaysersberg Vignoble",
-      "station_id": "safran-2588",
-      "distance_km": 1.1
-    },
-    {
-      "commune": "Kembs",
-      "station_id": "safran-3492",
-      "distance_km": 5.5
     },
     {
       "commune": "Kembs",
@@ -3969,21 +3439,6 @@
       "commune": "Lautenbach",
       "station_id": "safran-2976",
       "distance_km": 4.2
-    },
-    {
-      "commune": "Lautenbach",
-      "station_id": "safran-2976",
-      "distance_km": 4.2
-    },
-    {
-      "commune": "Lautenbach",
-      "station_id": "safran-2976",
-      "distance_km": 4.2
-    },
-    {
-      "commune": "Lautenbachzell",
-      "station_id": "safran-2975",
-      "distance_km": 1.2
     },
     {
       "commune": "Lautenbachzell",
@@ -4061,11 +3516,6 @@
       "distance_km": 2.9
     },
     {
-      "commune": "Valdieu-Lutran",
-      "station_id": "safran-3488",
-      "distance_km": 2.9
-    },
-    {
       "commune": "Luttenbach-près-Munster",
       "station_id": "safran-2844",
       "distance_km": 1.4
@@ -4104,11 +3554,6 @@
       "commune": "Manspach",
       "station_id": "safran-3488",
       "distance_km": 4.2
-    },
-    {
-      "commune": "Masevaux-Niederbruck",
-      "station_id": "safran-3235",
-      "distance_km": 2.1
     },
     {
       "commune": "Masevaux-Niederbruck",
@@ -4186,11 +3631,6 @@
       "distance_km": 3.4
     },
     {
-      "commune": "Mooslargue",
-      "station_id": "safran-3736",
-      "distance_km": 3.4
-    },
-    {
       "commune": "Moosch",
       "station_id": "safran-3107",
       "distance_km": 3.7
@@ -4206,16 +3646,6 @@
       "distance_km": 4.3
     },
     {
-      "commune": "Haut Soultzbach",
-      "station_id": "safran-3362",
-      "distance_km": 4.3
-    },
-    {
-      "commune": "Muespach",
-      "station_id": "safran-3615",
-      "distance_km": 1.9
-    },
-    {
       "commune": "Muespach",
       "station_id": "safran-3615",
       "distance_km": 1.9
@@ -4229,21 +3659,6 @@
       "commune": "Muhlbach-sur-Munster",
       "station_id": "safran-2844",
       "distance_km": 3.8
-    },
-    {
-      "commune": "Mulhouse",
-      "station_id": "safran-3238",
-      "distance_km": 4.1
-    },
-    {
-      "commune": "Mulhouse",
-      "station_id": "safran-3238",
-      "distance_km": 4.1
-    },
-    {
-      "commune": "Mulhouse",
-      "station_id": "safran-3238",
-      "distance_km": 4.1
     },
     {
       "commune": "Mulhouse",
@@ -4314,16 +3729,6 @@
       "commune": "Oberbruck",
       "station_id": "safran-3234",
       "distance_km": 4.1
-    },
-    {
-      "commune": "Illtal",
-      "station_id": "safran-3614",
-      "distance_km": 2.6
-    },
-    {
-      "commune": "Illtal",
-      "station_id": "safran-3614",
-      "distance_km": 2.6
     },
     {
       "commune": "Illtal",
@@ -4611,21 +4016,6 @@
       "distance_km": 4.2
     },
     {
-      "commune": "Saint-Louis",
-      "station_id": "safran-3492",
-      "distance_km": 4.2
-    },
-    {
-      "commune": "Saint-Louis",
-      "station_id": "safran-3492",
-      "distance_km": 4.2
-    },
-    {
-      "commune": "Sainte-Marie-aux-Mines",
-      "station_id": "safran-2460",
-      "distance_km": 3.0
-    },
-    {
       "commune": "Sainte-Marie-aux-Mines",
       "station_id": "safran-2460",
       "distance_km": 3.0
@@ -4719,16 +4109,6 @@
       "commune": "Soultzmatt",
       "station_id": "safran-2845",
       "distance_km": 3.6
-    },
-    {
-      "commune": "Soultzmatt",
-      "station_id": "safran-2845",
-      "distance_km": 3.6
-    },
-    {
-      "commune": "Spechbach",
-      "station_id": "safran-3363",
-      "distance_km": 3.9
     },
     {
       "commune": "Spechbach",
