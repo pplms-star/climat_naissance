@@ -7,8 +7,8 @@ naissance) à une **période actuelle** de 30 ans — fixe (1994-2023) pour les
 stations à très long historique, ou glissante (30 dernières années
 disponibles) pour les autres.
 
-Couverture actuelle : Alsace uniquement (Bas-Rhin + Haut-Rhin), 36 stations
-Météo-France, 64 communes rattachées.
+Couverture actuelle : Alsace uniquement (Bas-Rhin + Haut-Rhin)
+Données Météo-France SAFRAN, grille 8km
 
 ## Structure
 
