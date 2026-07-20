@@ -10,20 +10,6 @@
   "projections": null,
   "annees": [
     {
-      "annee": 1958,
-      "tx_moy": 14.31,
-      "tn_moy": 8.4,
-      "tm_moy": 11.14,
-      "ete_tm_moy": 19.18,
-      "ete_tx_moy": 23.3,
-      "hiver_tm_moy": null,
-      "jours_chauds_25": 16,
-      "jours_chauds_30": 1,
-      "nuits_tropicales": 0,
-      "jours_gel": 8,
-      "jours_vague_chaleur": 3
-    },
-    {
       "annee": 1959,
       "tx_moy": 14.98,
       "tn_moy": 7.31,
@@ -616,7 +602,7 @@
       "tx_moy": 15.29,
       "tn_moy": 8.22,
       "tm_moy": 11.47,
-      "ete_tm_moy": 19.48,
+      "ete_tm_moy": 19.47,
       "ete_tx_moy": 23.93,
       "hiver_tm_moy": 4.96,
       "jours_chauds_25": 47,
@@ -771,7 +757,7 @@
       "tn_moy": 8.01,
       "tm_moy": 11.66,
       "ete_tm_moy": 20.2,
-      "ete_tx_moy": 24.53,
+      "ete_tx_moy": 24.52,
       "hiver_tm_moy": 3.26,
       "jours_chauds_25": 55,
       "jours_chauds_30": 14,
@@ -960,20 +946,6 @@
       "nuits_tropicales": 10,
       "jours_gel": 47,
       "jours_vague_chaleur": 17
-    },
-    {
-      "annee": 2026,
-      "tx_moy": 15.73,
-      "tn_moy": 7.54,
-      "tm_moy": 11.45,
-      "ete_tm_moy": 22.66,
-      "ete_tx_moy": 27.31,
-      "hiver_tm_moy": 4.04,
-      "jours_chauds_25": 28,
-      "jours_chauds_30": 16,
-      "nuits_tropicales": 15,
-      "jours_gel": 21,
-      "jours_vague_chaleur": 22
     }
   ]
 }
