@@ -859,17 +859,18 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
   const dataMinAxe = annees[0].annee, dataMaxAxe = annees[annees.length - 1].annee;
 
-  const bandesEtLignesEtat = {stade: 0}; // 0 = rien, 1 = bandes/lignes actives
+  const bandesEtLignesEtat = {opacite: 0}; // 0 = invisible, 1 = pleinement visible (fondu progressif)
 
   const bandesPlugin = {
     id: 'bandes_' + idCanvas,
     beforeDraw(chart){
-      if(bandesEtLignesEtat.stade < 1) return;
+      if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
       const x1 = x.getPixelForValue(Math.max(ref.start, dataMinAxe));
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
       ctx.save();
+      ctx.globalAlpha = bandesEtLignesEtat.opacite;
       ctx.fillStyle = 'rgba(143,160,184,0.22)'; // gris = période de référence
       ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
 
@@ -887,14 +888,15 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
   const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDraw(chart){
-      if(bandesEtLignesEtat.stade < 1) return;
+      if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x, y}} = chart;
       if(!chartArea) return;
+      ctx.save();
+      ctx.globalAlpha = bandesEtLignesEtat.opacite;
 
       // Trait vertical : année de naissance
       if(anneeNaissance >= dataMinAxe && anneeNaissance <= dataMaxAxe){
         const xPix = x.getPixelForValue(anneeNaissance);
-        ctx.save();
         ctx.strokeStyle = '#EAEFF3';
         ctx.setLineDash([4,3]);
         ctx.lineWidth = 1.5;
@@ -902,13 +904,12 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.moveTo(xPix, chartArea.top);
         ctx.lineTo(xPix, chartArea.bottom);
         ctx.stroke();
-        ctx.restore();
+        ctx.setLineDash([]);
       }
 
       // Ligne horizontale : moyenne de la période de référence (façon RTBF)
       if(v1 != null){
         const yPix = y.getPixelForValue(v1);
-        ctx.save();
         ctx.strokeStyle = '#8FA0B8';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -920,8 +921,8 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.textBaseline = 'bottom';
         ctx.textAlign = 'right';
         ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix - 3);
-        ctx.restore();
       }
+      ctx.restore();
     }
   };
 
@@ -932,6 +933,19 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
   const datasetMobile = {label:'Moyenne mobile 10 ans', data:[], borderColor:'#E8A33D',
     borderWidth:2.5, pointRadius:0, tension:0.3};
 
+  // Fondu progressif des bandes/lignes sur ~1200ms, via requestAnimationFrame
+  function fondreBandesEtLignes(){
+    const debut = performance.now();
+    const duree = 1200;
+    function etape(t){
+      const progres = Math.min(1, (t - debut) / duree);
+      bandesEtLignesEtat.opacite = progres;
+      chart.update('none'); // redessine sans relancer l'animation Chart.js
+      if(progres < 1) requestAnimationFrame(etape);
+    }
+    requestAnimationFrame(etape);
+  }
+
   let etapeReveal = 0;
   const chart = new Chart(document.getElementById(idCanvas), {
     type:'line',
@@ -940,16 +954,18 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       responsive:true,
       maintainAspectRatio:false,
       animation:{
-        duration:900,
+        duration:1600,
+        easing:'easeOutQuart',
         onComplete(){
           if(etapeReveal === 0){
             etapeReveal = 1;
-            datasetMobile.data = pointsMobile;   // étape 2 : la courbe apparaît
-            chart.update();
+            setTimeout(() => {
+              datasetMobile.data = pointsMobile;   // étape 2 : la courbe apparaît
+              chart.update();
+            }, 400); // petite pause avant que la courbe ne se dessine
           } else if(etapeReveal === 1){
             etapeReveal = 2;
-            bandesEtLignesEtat.stade = 1;         // étape 3 : bandes + lignes de référence
-            chart.update();
+            setTimeout(fondreBandesEtLignes, 300); // petite pause avant le fondu des bandes/lignes
           }
         }
       },
