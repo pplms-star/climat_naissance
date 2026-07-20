@@ -852,9 +852,12 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
   const dataMinAxe = annees[0].annee, dataMaxAxe = annees[annees.length - 1].annee;
 
+  const bandesEtLignesEtat = {stade: 0}; // 0 = rien, 1 = bandes/lignes actives
+
   const bandesPlugin = {
     id: 'bandes_' + idCanvas,
     beforeDraw(chart){
+      if(bandesEtLignesEtat.stade < 1) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
       const x1 = x.getPixelForValue(Math.max(ref.start, dataMinAxe));
@@ -877,6 +880,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
   const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDraw(chart){
+      if(bandesEtLignesEtat.stade < 1) return;
       const {ctx, chartArea, scales:{x, y}} = chart;
       if(!chartArea) return;
 
@@ -915,19 +919,33 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
   };
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
-  charts[idCanvas] = new Chart(document.getElementById(idCanvas), {
+
+  const datasetPoints = {label:'Valeur annuelle', data:pointsValeurs, borderColor:'#ED7318',
+    backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false};
+  const datasetMobile = {label:'Moyenne mobile 10 ans', data:[], borderColor:'#E8A33D',
+    borderWidth:2.5, pointRadius:0, tension:0.3};
+
+  let etapeReveal = 0;
+  const chart = new Chart(document.getElementById(idCanvas), {
     type:'line',
-    data:{
-      datasets:[
-        {label:'Valeur annuelle', data:pointsValeurs, borderColor:'#ED7318',
-         backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
-        {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
-         borderWidth:2.5, pointRadius:0, tension:0.3}
-      ]
-    },
+    data:{ datasets:[datasetPoints, datasetMobile] },
     options:{
       responsive:true,
       maintainAspectRatio:false,
+      animation:{
+        duration:900,
+        onComplete(){
+          if(etapeReveal === 0){
+            etapeReveal = 1;
+            datasetMobile.data = pointsMobile;   // étape 2 : la courbe apparaît
+            chart.update();
+          } else if(etapeReveal === 1){
+            etapeReveal = 2;
+            bandesEtLignesEtat.stade = 1;         // étape 3 : bandes + lignes de référence
+            chart.update();
+          }
+        }
+      },
       plugins:{ legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}} },
       scales:{
         x:{ type:'linear', min:dataMinAxe, max:dataMaxAxe,
@@ -937,6 +955,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
     },
     plugins:[bandesPlugin, lignePlugin]
   });
+  charts[idCanvas] = chart;
 }
 
 function construireCartes(annees, ref, actuel){
