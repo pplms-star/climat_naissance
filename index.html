@@ -326,10 +326,53 @@
     </div>
   </header>
 
+  <section id="sec-national" class="reveal">
+    <p class="eyebrow">Étape 1 · le contexte national</p>
+    <h2>D'abord, la France entière</h2>
+    <p class="texte" id="texte-national-intro">
+      Avant de parler de ta commune, regardons l'évolution du climat à l'échelle de tout le pays.
+      Voici la température moyenne annuelle en France depuis 1958, mesurée par l'Indicateur
+      Thermique National de Météo-France (moyenne pondérée de 30 stations réparties sur le territoire).
+    </p>
+    <div class="encadre-methode">
+      <b>Deux notions à connaître</b> — une <b>normale climatique</b> est la moyenne d'un paramètre
+      météo (ici la température) calculée sur une période de référence, habituellement 30 ans :
+      c'est le repère "normal" auquel on compare le climat d'une année donnée. La
+      <b>période de référence</b> qu'on utilise sur ce site est <b>1976-2005</b> — une génération
+      en arrière, représentative du climat "d'avant" le réchauffement le plus marqué.
+    </div>
+
+    <div class="chart-box">
+      <div style="position:relative;height:340px;">
+        <canvas id="graph-national"></canvas>
+      </div>
+      <div class="legende-periodes">
+        <span><i class="pastille" style="background:var(--text-muted)"></i>période de référence 1976-2005</span>
+        <span><i class="pastille" style="background:none;border-top:2px solid var(--text-muted)"></i>moyenne de référence</span>
+      </div>
+    </div>
+
+    <p class="texte reveal" id="texte-national-transition" style="margin-top:32px;">
+      Continue à scroller : le même graphique se transforme maintenant en écart à cette référence,
+      année par année — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
+      que la normale, <span style="color:var(--warm)">rouge</span> pour les années plus chaudes.
+    </p>
+
+    <div class="chart-box reveal" id="bloc-national-barres">
+      <div style="position:relative;height:340px;">
+        <canvas id="graph-national-barres"></canvas>
+      </div>
+    </div>
+
+    <div class="cards reveal" id="cartes-national" style="margin-top:20px;"></div>
+
+    <p class="texte reveal" id="constat-national" style="margin-top:20px;font-family:var(--font-display);font-size:19px;"></p>
+  </section>
+
   <div id="recit">
 
     <section id="sec-reference" class="reveal">
-      <p class="eyebrow">Étape 1 · la référence</p>
+      <p class="eyebrow">Étape 2 · la référence</p>
       <h2>D'abord, fixons un point de comparaison</h2>
       <p class="texte" id="texte-reference"></p>
       <div class="encadre-methode">
@@ -340,7 +383,7 @@
     </section>
 
     <section id="sec-ete" class="reveal">
-      <p class="eyebrow">Étape 2 · l'été</p>
+      <p class="eyebrow">Étape 3 · l'été</p>
       <h2>Les étés se sont-ils réchauffés ?</h2>
       <p class="texte" id="texte-ete"></p>
       <div class="chart-box">
@@ -357,7 +400,7 @@
     </section>
 
     <section id="sec-annee" class="reveal">
-      <p class="eyebrow">Étape 3 · toute l'année</p>
+      <p class="eyebrow">Étape 4 · toute l'année</p>
       <h2>Et sur l'ensemble de l'année ?</h2>
       <p class="texte" id="texte-annee"></p>
       <div class="chart-box">
@@ -374,7 +417,7 @@
     </section>
 
     <section id="sec-resume" class="reveal">
-      <p class="eyebrow">Étape 4 · vue d'ensemble</p>
+      <p class="eyebrow">Étape 5 · vue d'ensemble</p>
       <h2>Ce qui a changé, en un coup d'œil</h2>
       <p class="texte">Au-delà des températures moyennes, ce sont les jours extrêmes qui se font sentir au quotidien.</p>
       <p class="texte" id="periodes-resume" style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);"></p>
@@ -387,7 +430,7 @@
     </section>
 
     <section id="sec-extremes" class="reveal">
-      <p class="eyebrow">Étape 5 · en détail</p>
+      <p class="eyebrow">Étape 6 · en détail</p>
       <h2>Les jours extrêmes, période par période</h2>
       <p class="texte">Nombre moyen de jours par an dans chaque catégorie, comparé entre ta référence et aujourd'hui (les nuits tropicales restent visibles dans le résumé ci-dessus).</p>
       <div class="chart-box">
@@ -399,7 +442,7 @@
     </section>
 
     <section id="sec-avenir" class="reveal">
-      <p class="eyebrow">Étape 6 · et demain ?</p>
+      <p class="eyebrow">Étape 7 · et demain ?</p>
       <h2>Vers le futur</h2>
       <div class="teaser" id="bloc-avenir">
         <p class="eyebrow">Bientôt disponible</p>
@@ -415,7 +458,7 @@
     </section>
 
     <section id="sec-comparaison" class="reveal">
-      <p class="eyebrow">Étape 7 · et ailleurs ?</p>
+      <p class="eyebrow">Étape 8 · et ailleurs ?</p>
       <h2>Comparer avec une autre commune</h2>
       <p class="texte">
         Choisis une deuxième commune pour comparer son climat actuel (les 10 dernières
@@ -470,6 +513,8 @@ let COMMUNES = null, STATIONS = null;
 async function init(){
   const inputAnnee = document.getElementById('annee');
   document.getElementById('annee-affichee').textContent = inputAnnee.value;
+
+  chargerDonneesNationales();
 
   try{
     const res = await fetch('data/communes.json');
@@ -1147,6 +1192,134 @@ function construireComparaison(donneesA, donneesB, anneeNaissance){
       }
     }
   });
+}
+
+// ============ Étape 1 : contexte national (France entière) ============
+let donneesNationales = null;
+
+async function chargerDonneesNationales(){
+  try{
+    const res = await fetch('data/france-nationale.json');
+    donneesNationales = await res.json();
+    differerConstruction('sec-national', construireGraphNational);
+    differerConstruction('bloc-national-barres', construireGraphNationalBarres);
+  }catch(e){
+    console.error(e);
+  }
+}
+
+function construireGraphNational(){
+  const d = donneesNationales;
+  const dataMinAxe = d.annees[0].annee, dataMaxAxe = d.annees[d.annees.length-1].annee;
+  const points = d.annees.map(a => ({x:a.annee, y:a.tm}));
+  const [refDebut, refFin] = d.periode_reference;
+
+  const bandePlugin = {
+    id: 'bande_national',
+    beforeDraw(chart){
+      const {ctx, chartArea, scales:{x, y}} = chart;
+      if(!chartArea) return;
+      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
+      ctx.save();
+      ctx.fillStyle = 'rgba(143,160,184,0.22)';
+      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
+      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#8FA0B8';
+      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
+
+      const yPix = y.getPixelForValue(d.moyenne_reference);
+      ctx.beginPath();
+      ctx.strokeStyle = '#8FA0B8'; ctx.lineWidth = 1.5;
+      ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
+      ctx.stroke();
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`, chartArea.right-4, yPix-3);
+      ctx.restore();
+    }
+  };
+
+  if(charts['graph-national']) charts['graph-national'].destroy();
+  charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
+    type:'line',
+    data:{ datasets:[{
+      label:'Température moyenne annuelle (France)', data:points,
+      borderColor:'#ED7318', backgroundColor:'#ED7318',
+      pointRadius:3, pointBackgroundColor:'#ED7318', tension:0.15, borderWidth:1.5
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      animation:{duration:1600, easing:'easeOutQuart'},
+      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12}}},
+      scales:{
+        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
+        y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}}
+      }
+    },
+    plugins:[bandePlugin]
+  });
+}
+
+function construireGraphNationalBarres(){
+  const d = donneesNationales;
+  const [refDebut, refFin] = d.periode_reference;
+  const labels = d.annees.map(a => a.annee);
+  const ecarts = d.annees.map(a => Math.round((a.tm - d.moyenne_reference)*100)/100);
+  const couleurs = ecarts.map(e => e >= 0 ? '#D64545' : '#3E7CB1');
+
+  if(charts['graph-national-barres']) charts['graph-national-barres'].destroy();
+  charts['graph-national-barres'] = new Chart(document.getElementById('graph-national-barres'), {
+    type:'bar',
+    data:{ labels, datasets:[{
+      label:`Écart à la référence ${refDebut}-${refFin}`, data:ecarts,
+      backgroundColor:couleurs, borderWidth:0
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      animation:{duration:1400, easing:'easeOutQuart'},
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#8FA0B8', maxTicksLimit:12}, grid:{display:false}},
+        y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}, title:{display:true, text:'écart en °C', color:'#8FA0B8'}}
+      }
+    }
+  });
+
+  // Chiffres clés
+  const val2025 = d.annees.find(a => a.annee === Math.max(...labels)).tm;
+  const anneeRecente = Math.max(...labels);
+  const ecartRecent = Math.round((val2025 - d.moyenne_reference)*100)/100;
+
+  const premiereDecennie = d.annees.filter(a => a.annee < dataMinPlus10(d)).map(a=>a.tm);
+  const derniereDecennie = d.annees.filter(a => a.annee > anneeRecente-10).map(a=>a.tm);
+  const moyP = premiereDecennie.reduce((s,v)=>s+v,0)/premiereDecennie.length;
+  const moyD = derniereDecennie.reduce((s,v)=>s+v,0)/derniereDecennie.length;
+  const ecartDecennies = Math.round((moyD-moyP)*100)/100;
+
+  const cartes = document.getElementById('cartes-national');
+  cartes.innerHTML = `
+    <div class="card">
+      <div class="label">${anneeRecente} vs référence ${refDebut}-${refFin}</div>
+      <div class="value ${ecartRecent>=0?'up':'down'}">${ecartRecent>=0?'+':''}${ecartRecent.toFixed(1)}°C</div>
+    </div>
+    <div class="card">
+      <div class="label">1ère décennie → dernière décennie</div>
+      <div class="value ${ecartDecennies>=0?'up':'down'}">${ecartDecennies>=0?'+':''}${ecartDecennies.toFixed(1)}°C</div>
+      <div class="sub">${moyP.toFixed(1)}°C → ${moyD.toFixed(1)}°C</div>
+    </div>
+  `;
+
+  document.getElementById('constat-national').innerHTML =
+    `<strong>Constat</strong> : en ${anneeRecente}, la France était déjà
+    <strong>${ecartRecent.toFixed(1)}°C</strong> au-dessus de sa normale ${refDebut}-${refFin}.
+    Entre la première décennie mesurée ici (${d.annees[0].annee}-${d.annees[0].annee+9}) et la
+    dernière (${anneeRecente-9}-${anneeRecente}), le réchauffement atteint déjà
+    <strong>${ecartDecennies.toFixed(1)}°C</strong> — et c'est ce contexte national qui sert de toile
+    de fond à tout ce que tu vas découvrir sur ta propre commune.`;
+}
+
+function dataMinPlus10(d){
+  return d.annees[0].annee + 10;
 }
 
 init();
