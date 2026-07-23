@@ -629,7 +629,9 @@ function configurerAutocompleteCommune(idInput, idHidden, idListe, obtenirCommun
     setTimeout(() => liste.classList.remove('visible'), 150);
   });
 
-  window.addEventListener('scroll', () => liste.classList.remove('visible'), {passive:true});
+  window.addEventListener('scroll', () => {
+    if(liste.classList.contains('visible')) positionnerListe();
+  }, {passive:true});
 }
 
 function dessinerStripesDecor(){
@@ -719,7 +721,7 @@ async function changerCommune(){
     if(!dejaCharge){
       document.getElementById('recit').style.display = 'block';
       dejaCharge = true;
-      setTimeout(()=> document.getElementById('sec-reference').scrollIntoView({behavior:'smooth', block:'start'}), 400);
+      setTimeout(()=> document.getElementById('sec-national').scrollIntoView({behavior:'smooth', block:'start'}), 400);
     }
 
     // Prépare la section de comparaison (remise à zéro ; le filtre exclut déjà
@@ -999,8 +1001,15 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       responsive:true,
       maintainAspectRatio:false,
       animation:{
-        duration:1600,
+        duration:400,
         easing:'easeOutQuart',
+        delay(context){
+          if(context.type === 'data' && context.mode === 'default'){
+            if(context.datasetIndex === 0) return context.dataIndex * 18;   // points bruts
+            if(context.datasetIndex === 1) return context.dataIndex * 22;  // courbe : se trace point par point
+          }
+          return 0;
+        },
         onComplete(){
           if(etapeReveal === 0){
             etapeReveal = 1;
@@ -1211,7 +1220,9 @@ async function chargerDonneesNationales(){
 function construireGraphNational(){
   const d = donneesNationales;
   const dataMinAxe = d.annees[0].annee, dataMaxAxe = d.annees[d.annees.length-1].annee;
-  const points = d.annees.map(a => ({x:a.annee, y:a.tm}));
+  const pointsValeurs = d.annees.map(a => ({x:a.annee, y:a.tm}));
+  const mobile = moyenneMobile(d.annees, 'tm');
+  const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
 
   const bandePlugin = {
@@ -1242,15 +1253,26 @@ function construireGraphNational(){
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
     type:'line',
-    data:{ datasets:[{
-      label:'Température moyenne annuelle (France)', data:points,
-      borderColor:'#ED7318', backgroundColor:'#ED7318',
-      pointRadius:3, pointBackgroundColor:'#ED7318', tension:0.15, borderWidth:1.5
-    }]},
+    data:{ datasets:[
+      {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
+       backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
+      {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
+       borderWidth:2.5, pointRadius:0, tension:0.3}
+    ]},
     options:{
       responsive:true, maintainAspectRatio:false,
-      animation:{duration:1600, easing:'easeOutQuart'},
-      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12}}},
+      animation:{
+        duration:500,
+        easing:'easeOutQuart',
+        delay(context){
+          if(context.type === 'data' && context.mode === 'default'){
+            if(context.datasetIndex === 0) return context.dataIndex * 18;
+            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22;
+          }
+          return 0;
+        }
+      },
+      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}}},
       scales:{
         x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
         y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}}
