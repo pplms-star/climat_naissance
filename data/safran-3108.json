@@ -7,22 +7,31 @@
     "debut": 1994,
     "fin": 2023
   },
-  "projections": null,
-  "annees": [
-    {
-      "annee": 1958,
-      "tx_moy": 10.66,
-      "tn_moy": 5.99,
-      "tm_moy": 8.24,
-      "ete_tm_moy": 15.98,
-      "ete_tx_moy": 19.15,
-      "hiver_tm_moy": null,
-      "jours_chauds_25": 4,
-      "jours_chauds_30": 0,
-      "nuits_tropicales": 0,
-      "jours_gel": 22,
-      "jours_vague_chaleur": 3
+  "projections": {
+    "GWL30": {
+      "scenario": "Réchauffement Monde +3,0°C / France +4°C (2079-2098)",
+      "tm_annuelle": 12.2,
+      "tm_ete": 21.12,
+      "tm_hiver": 4.48,
+      "tx_ete": 24.46,
+      "jours_plus_35": 2.9,
+      "jours_plus_30": 16.65,
+      "nuits_tropicales": 26.8,
+      "jours_risque_feu": 1.25
     },
+    "GWL20": {
+      "scenario": "Réchauffement Monde +2,0°C / France +2,7°C (2052-2071)",
+      "tm_annuelle": 10.7,
+      "tm_ete": 19.17,
+      "tm_hiver": 2.81,
+      "tx_ete": 22.35,
+      "jours_plus_35": 0.5,
+      "jours_plus_30": 6.5,
+      "nuits_tropicales": 12.1,
+      "jours_risque_feu": 0.4
+    }
+  },
+  "annees": [
     {
       "annee": 1959,
       "tx_moy": 11.51,
@@ -960,20 +969,6 @@
       "nuits_tropicales": 1,
       "jours_gel": 59,
       "jours_vague_chaleur": 13
-    },
-    {
-      "annee": 2026,
-      "tx_moy": 12.49,
-      "tn_moy": 5.64,
-      "tm_moy": 8.76,
-      "ete_tm_moy": 19.23,
-      "ete_tx_moy": 23.59,
-      "hiver_tm_moy": 2.78,
-      "jours_chauds_25": 20,
-      "jours_chauds_30": 10,
-      "nuits_tropicales": 7,
-      "jours_gel": 33,
-      "jours_vague_chaleur": 21
     }
   ]
 }

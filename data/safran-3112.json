@@ -7,22 +7,31 @@
     "debut": 1994,
     "fin": 2023
   },
-  "projections": null,
-  "annees": [
-    {
-      "annee": 1958,
-      "tx_moy": 14.19,
-      "tn_moy": 7.91,
-      "tm_moy": 10.87,
-      "ete_tm_moy": 19.15,
-      "ete_tx_moy": 23.45,
-      "hiver_tm_moy": null,
-      "jours_chauds_25": 19,
-      "jours_chauds_30": 2,
-      "nuits_tropicales": 0,
-      "jours_gel": 10,
-      "jours_vague_chaleur": 3
+  "projections": {
+    "GWL30": {
+      "scenario": "Réchauffement Monde +3,0°C / France +4°C (2079-2098)",
+      "tm_annuelle": 14.31,
+      "tm_ete": 23.4,
+      "tm_hiver": 6.12,
+      "tx_ete": 28.0,
+      "jours_plus_35": 9.5,
+      "jours_plus_30": 36.15,
+      "nuits_tropicales": 35.0,
+      "jours_risque_feu": 3.85
     },
+    "GWL20": {
+      "scenario": "Réchauffement Monde +2,0°C / France +2,7°C (2052-2071)",
+      "tm_annuelle": 12.87,
+      "tm_ete": 21.62,
+      "tm_hiver": 4.47,
+      "tx_ete": 26.05,
+      "jours_plus_35": 3.6,
+      "jours_plus_30": 21.85,
+      "nuits_tropicales": 16.45,
+      "jours_risque_feu": 1.8
+    }
+  },
+  "annees": [
     {
       "annee": 1959,
       "tx_moy": 14.95,
@@ -756,7 +765,7 @@
       "tx_moy": 16.06,
       "tn_moy": 8.03,
       "tm_moy": 11.7,
-      "ete_tm_moy": 18.73,
+      "ete_tm_moy": 18.72,
       "ete_tx_moy": 23.1,
       "hiver_tm_moy": 1.93,
       "jours_chauds_25": 55,
@@ -960,20 +969,6 @@
       "nuits_tropicales": 13,
       "jours_gel": 43,
       "jours_vague_chaleur": 19
-    },
-    {
-      "annee": 2026,
-      "tx_moy": 15.77,
-      "tn_moy": 7.72,
-      "tm_moy": 11.57,
-      "ete_tm_moy": 23.3,
-      "ete_tx_moy": 27.91,
-      "hiver_tm_moy": 4.04,
-      "jours_chauds_25": 30,
-      "jours_chauds_30": 18,
-      "nuits_tropicales": 16,
-      "jours_gel": 18,
-      "jours_vague_chaleur": 26
     }
   ]
 }

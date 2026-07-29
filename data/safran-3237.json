@@ -7,22 +7,31 @@
     "debut": 1994,
     "fin": 2023
   },
-  "projections": null,
-  "annees": [
-    {
-      "annee": 1958,
-      "tx_moy": 13.57,
-      "tn_moy": 7.38,
-      "tm_moy": 10.3,
-      "ete_tm_moy": 18.71,
-      "ete_tx_moy": 22.91,
-      "hiver_tm_moy": null,
-      "jours_chauds_25": 18,
-      "jours_chauds_30": 1,
-      "nuits_tropicales": 0,
-      "jours_gel": 11,
-      "jours_vague_chaleur": 3
+  "projections": {
+    "GWL30": {
+      "scenario": "Réchauffement Monde +3,0°C / France +4°C (2079-2098)",
+      "tm_annuelle": 13.77,
+      "tm_ete": 22.85,
+      "tm_hiver": 5.56,
+      "tx_ete": 27.87,
+      "jours_plus_35": 8.25,
+      "jours_plus_30": 37.25,
+      "nuits_tropicales": 23.35,
+      "jours_risque_feu": 3.95
     },
+    "GWL20": {
+      "scenario": "Réchauffement Monde +2,0°C / France +2,7°C (2052-2071)",
+      "tm_annuelle": 12.33,
+      "tm_ete": 21.11,
+      "tm_hiver": 3.94,
+      "tx_ete": 25.9,
+      "jours_plus_35": 3.6,
+      "jours_plus_30": 21.1,
+      "nuits_tropicales": 9.15,
+      "jours_risque_feu": 1.9
+    }
+  },
+  "annees": [
     {
       "annee": 1959,
       "tx_moy": 14.52,
@@ -182,7 +191,7 @@
       "tx_moy": 12.83,
       "tn_moy": 6.22,
       "tm_moy": 9.26,
-      "ete_tm_moy": 18.18,
+      "ete_tm_moy": 18.17,
       "ete_tx_moy": 22.56,
       "hiver_tm_moy": -0.37,
       "jours_chauds_25": 35,
@@ -560,7 +569,7 @@
       "tx_moy": 14.58,
       "tn_moy": 6.29,
       "tm_moy": 10.08,
-      "ete_tm_moy": 18.38,
+      "ete_tm_moy": 18.37,
       "ete_tx_moy": 23.17,
       "hiver_tm_moy": 0.41,
       "jours_chauds_25": 43,
@@ -602,7 +611,7 @@
       "tx_moy": 15.27,
       "tn_moy": 7.47,
       "tm_moy": 11.03,
-      "ete_tm_moy": 18.12,
+      "ete_tm_moy": 18.13,
       "ete_tx_moy": 23.1,
       "hiver_tm_moy": 3.36,
       "jours_chauds_25": 43,
@@ -960,20 +969,6 @@
       "nuits_tropicales": 12,
       "jours_gel": 49,
       "jours_vague_chaleur": 23
-    },
-    {
-      "annee": 2026,
-      "tx_moy": 15.6,
-      "tn_moy": 6.83,
-      "tm_moy": 11.05,
-      "ete_tm_moy": 22.84,
-      "ete_tx_moy": 28.01,
-      "hiver_tm_moy": 3.63,
-      "jours_chauds_25": 30,
-      "jours_chauds_30": 18,
-      "nuits_tropicales": 12,
-      "jours_gel": 23,
-      "jours_vague_chaleur": 33
     }
   ]
 }

@@ -7,22 +7,31 @@
     "debut": 1994,
     "fin": 2023
   },
-  "projections": null,
-  "annees": [
-    {
-      "annee": 1958,
-      "tx_moy": 13.28,
-      "tn_moy": 7.21,
-      "tm_moy": 10.08,
-      "ete_tm_moy": 18.51,
-      "ete_tx_moy": 22.58,
-      "hiver_tm_moy": null,
-      "jours_chauds_25": 14,
-      "jours_chauds_30": 1,
-      "nuits_tropicales": 0,
-      "jours_gel": 12,
-      "jours_vague_chaleur": 3
+  "projections": {
+    "GWL30": {
+      "scenario": "Réchauffement Monde +3,0°C / France +4°C (2079-2098)",
+      "tm_annuelle": 13.43,
+      "tm_ete": 22.42,
+      "tm_hiver": 5.22,
+      "tx_ete": 27.25,
+      "jours_plus_35": 6.45,
+      "jours_plus_30": 29.95,
+      "nuits_tropicales": 22.4,
+      "jours_risque_feu": 2.4
     },
+    "GWL20": {
+      "scenario": "Réchauffement Monde +2,0°C / France +2,7°C (2052-2071)",
+      "tm_annuelle": 12.0,
+      "tm_ete": 20.71,
+      "tm_hiver": 3.6,
+      "tx_ete": 25.32,
+      "jours_plus_35": 2.4,
+      "jours_plus_30": 15.6,
+      "nuits_tropicales": 8.75,
+      "jours_risque_feu": 0.8
+    }
+  },
+  "annees": [
     {
       "annee": 1959,
       "tx_moy": 14.19,
@@ -868,7 +877,7 @@
       "tx_moy": 14.99,
       "tn_moy": 7.46,
       "tm_moy": 11.02,
-      "ete_tm_moy": 20.43,
+      "ete_tm_moy": 20.42,
       "ete_tx_moy": 25.39,
       "hiver_tm_moy": 3.39,
       "jours_chauds_25": 55,
@@ -953,27 +962,13 @@
       "tn_moy": 7.74,
       "tm_moy": 11.28,
       "ete_tm_moy": 20.19,
-      "ete_tx_moy": 24.97,
+      "ete_tx_moy": 24.98,
       "hiver_tm_moy": 3.14,
       "jours_chauds_25": 53,
       "jours_chauds_30": 13,
       "nuits_tropicales": 9,
       "jours_gel": 49,
       "jours_vague_chaleur": 25
-    },
-    {
-      "annee": 2026,
-      "tx_moy": 15.16,
-      "tn_moy": 6.56,
-      "tm_moy": 10.68,
-      "ete_tm_moy": 22.13,
-      "ete_tx_moy": 27.26,
-      "hiver_tm_moy": 3.49,
-      "jours_chauds_25": 28,
-      "jours_chauds_30": 15,
-      "nuits_tropicales": 9,
-      "jours_gel": 22,
-      "jours_vague_chaleur": 27
     }
   ]
 }
