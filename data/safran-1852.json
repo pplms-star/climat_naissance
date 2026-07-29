@@ -7,7 +7,30 @@
     "debut": 1994,
     "fin": 2023
   },
-  "projections": null,
+  "projections": {
+    "GWL30": {
+      "scenario": "Réchauffement Monde +3,0°C / France +4°C (2079-2098)",
+      "tm_annuelle": 14.55,
+      "tm_ete": 23.54,
+      "tm_hiver": 6.45,
+      "tx_ete": 27.72,
+      "jours_plus_35": 8.0,
+      "jours_plus_30": 33.8,
+      "nuits_tropicales": 38.65,
+      "jours_risque_feu": 2.65
+    },
+    "GWL20": {
+      "scenario": "Réchauffement Monde +2,0°C / France +2,7°C (2052-2071)",
+      "tm_annuelle": 13.18,
+      "tm_ete": 21.92,
+      "tm_hiver": 4.82,
+      "tx_ete": 26.07,
+      "jours_plus_35": 3.3,
+      "jours_plus_30": 20.15,
+      "nuits_tropicales": 19.65,
+      "jours_risque_feu": 1.05
+    }
+  },
   "annees": [
     {
       "annee": 1959,
