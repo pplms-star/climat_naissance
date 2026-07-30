@@ -287,6 +287,25 @@
   }
   .teaser .eyebrow{margin-bottom:8px;}
 
+  .toggle-scenarios{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;}
+  .toggle-scenarios button{
+    font-family:var(--font-mono);
+    font-size:13px;
+    padding:9px 16px;
+    border-radius:20px;
+    border:1px solid var(--panel-border);
+    background:var(--panel);
+    color:var(--text-muted);
+    cursor:pointer;
+  }
+  .toggle-scenarios button:hover{border-color:var(--amber);}
+  .toggle-scenarios button.actif{
+    background:var(--amber);
+    border-color:var(--amber);
+    color:#12100A;
+    font-weight:600;
+  }
+
   canvas{max-width:100%;}
   footer{padding:40px 0 80px;color:var(--text-muted);font-size:12px;border-top:1px solid var(--panel-border);}
   footer a{color:var(--text-muted);}
@@ -444,15 +463,19 @@
     <section id="sec-avenir" class="reveal">
       <p class="eyebrow">Étape 7 · et demain ?</p>
       <h2>Vers le futur</h2>
-      <div class="teaser" id="bloc-avenir">
-        <p class="eyebrow">Bientôt disponible</p>
+      <p class="texte" id="texte-avenir-intro">
+        Voici comment le climat de ta commune pourrait évoluer selon les projections DRIAS
+        (Météo-France), à deux "niveaux de réchauffement global" différents — plus l'échéance
+        est lointaine, plus le réchauffement simulé est important.
+      </p>
+      <div class="toggle-scenarios" id="toggle-scenarios"></div>
+      <p class="texte" id="texte-scenario-actif" style="font-size:13px;color:var(--text-muted);margin-top:10px;"></p>
+      <div class="cards" id="cartes-avenir" style="margin-top:18px;"></div>
+      <div class="teaser" id="bloc-avenir-indispo" style="display:none;">
+        <p class="eyebrow">Pas encore disponible ici</p>
         <p class="texte">
-          Cette section montrera des projections à horizon 2050–2100 selon
-          différents scénarios climatiques (GIEC), à partir de données de
-          projection régionalisées (DRIAS). Elle s'activera automatiquement
-          dès qu'un champ <code>projections</code> sera renseigné dans le
-          fichier de données de la ville — aucune autre modification du site
-          ne sera nécessaire.
+          Les projections DRIAS ne couvrent pas encore cette maille précise. Choisis une commune
+          voisine pour voir cette section, ou reviens plus tard si la couverture s'étend.
         </p>
       </div>
     </section>
@@ -881,12 +904,8 @@ function construireRecit(data, anneeNaissance){
   // --- étape 5 : extrêmes ---
   differerConstruction('sec-extremes', () => construireGraphExtremes(annees, ref, actuel));
 
-  // --- étape 6 : avenir ---
-  if(data.projections){
-    // Section prête à être développée dès que des données de projection existent.
-    document.getElementById('bloc-avenir').innerHTML =
-      '<p class="texte">Données de projection détectées — section à construire.</p>';
-  }
+  // --- étape 7 : avenir ---
+  construireAvenir(data, annees, actuel);
 }
 
 function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanvas, phrase}){
@@ -1093,7 +1112,91 @@ function construireGraphExtremes(annees, ref, actuel){
   });
 }
 
-// ============ Comparaison avec une autre commune ============
+// ============ Étape 7 : projections futures (DRIAS) ============
+let scenarioActif = null;
+
+function construireAvenir(data, annees, actuel){
+  const blocIndispo = document.getElementById('bloc-avenir-indispo');
+  const toggle = document.getElementById('toggle-scenarios');
+  const cartes = document.getElementById('cartes-avenir');
+  const texteScenario = document.getElementById('texte-scenario-actif');
+
+  const projections = data.projections;
+  if(!projections || typeof projections !== 'object' || Object.keys(projections).length === 0){
+    blocIndispo.style.display = 'block';
+    toggle.innerHTML = ''; cartes.innerHTML = ''; texteScenario.textContent = '';
+    return;
+  }
+  blocIndispo.style.display = 'none';
+
+  // Ordonne les niveaux du plus proche au plus lointain (GWL20 avant GWL30)
+  const niveaux = Object.keys(projections).sort((a,b) => {
+    const na = parseInt(a.replace(/\D/g,''), 10), nb = parseInt(b.replace(/\D/g,''), 10);
+    return na - nb;
+  });
+
+  if(!scenarioActif || !niveaux.includes(scenarioActif)) scenarioActif = niveaux[0];
+
+  toggle.innerHTML = '';
+  niveaux.forEach(niveau => {
+    const btn = document.createElement('button');
+    btn.textContent = niveau;
+    btn.className = niveau === scenarioActif ? 'actif' : '';
+    btn.addEventListener('click', () => {
+      scenarioActif = niveau;
+      construireAvenir(data, annees, actuel);
+    });
+    toggle.appendChild(btn);
+  });
+
+  const proj = projections[scenarioActif];
+  texteScenario.textContent = proj.scenario || scenarioActif;
+
+  // Indicateurs avec un équivalent historique direct (comparaison possible)
+  const indicateursComparables = [
+    {cleHisto:'tm_moy', cleProj:'tm_annuelle', label:'Température moyenne annuelle', unite:'°C', dec:1},
+    {cleHisto:'ete_tm_moy', cleProj:'tm_ete', label:'Été (moyenne)', unite:'°C', dec:1},
+    {cleHisto:'hiver_tm_moy', cleProj:'tm_hiver', label:'Hiver (moyenne)', unite:'°C', dec:1},
+    {cleHisto:'ete_tx_moy', cleProj:'tx_ete', label:'Été (max. moyen)', unite:'°C', dec:1},
+    {cleHisto:'jours_chauds_30', cleProj:'jours_plus_30', label:'Jours > 30°C', unite:'j/an', dec:0},
+    {cleHisto:'nuits_tropicales', cleProj:'nuits_tropicales', label:'Nuits tropicales', unite:'j/an', dec:0},
+  ];
+  // Indicateurs propres aux projections, sans suivi historique équivalent sur ce site
+  const indicateursNouveaux = [
+    {cleProj:'jours_plus_35', label:'Jours > 35°C', unite:'j/an', dec:0},
+    {cleProj:'jours_risque_feu', label:'Jours à risque feu élevé', unite:'j/an', dec:0},
+  ];
+
+  cartes.innerHTML = '';
+
+  indicateursComparables.forEach(ind => {
+    const actuelVal = moyennePeriode(annees, ind.cleHisto, actuel.start, actuel.end);
+    const projVal = proj[ind.cleProj];
+    const div = document.createElement('div');
+    div.className = 'card';
+    if(actuelVal != null && projVal != null){
+      const delta = projVal - actuelVal;
+      div.innerHTML = `
+        <div class="label">${ind.label}</div>
+        <div class="value ${delta>=0?'up':'down'}">${delta>=0?'+':''}${delta.toFixed(ind.dec===0?1:ind.dec)} ${ind.unite}</div>
+        <div class="sub">${actuelVal.toFixed(ind.dec)} → ${projVal.toFixed(ind.dec)} ${ind.unite}</div>`;
+    } else {
+      div.innerHTML = `<div class="label">${ind.label}</div><div class="value">—</div>`;
+    }
+    cartes.appendChild(div);
+  });
+
+  indicateursNouveaux.forEach(ind => {
+    const projVal = proj[ind.cleProj];
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="label">${ind.label}</div>
+      <div class="value">${projVal != null ? projVal.toFixed(ind.dec) : '—'} ${ind.unite}</div>
+      <div class="sub">pas de suivi historique équivalent sur ce site</div>`;
+    cartes.appendChild(div);
+  });
+}
 async function lancerComparaison(){
   const communeVal = document.getElementById('commune-comparaison').value;
   const blocComp = document.getElementById('bloc-comparaison');
