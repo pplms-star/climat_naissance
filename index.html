@@ -1333,43 +1333,63 @@ function construireGraphNational(){
   const [refDebut, refFin] = d.periode_reference;
 
   const bandePlugin = {
-    id: 'bande_national',
-    beforeDraw(chart){
-      const {ctx, chartArea, scales:{x, y}} = chart;
-      if(!chartArea) return;
-      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
-      ctx.save();
-      ctx.fillStyle = 'rgba(143,160,184,0.22)';
-      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
-      ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#8FA0B8';
-      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
-      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
+  id: 'bande_national',
+  beforeDraw(chart){
+    const {ctx, chartArea, scales:{x, y}} = chart;
+    if(!chartArea) return;
 
- const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+    const x1 = x.getPixelForValue(refDebut);
+    const x2 = x.getPixelForValue(refFin);
 
-ctx.font = 'bold 15px var(--font-mono)';
-ctx.textAlign = 'right';
-ctx.textBaseline = 'bottom';
+    ctx.save();
 
-// Mesurer la largeur du texte
-const metrics = ctx.measureText(label);
-const padding = 6;
-const textWidth = metrics.width + padding * 2;
-const textHeight = 20;
+    // Bande bleue
+    ctx.fillStyle = 'rgba(143,160,184,0.22)';
+    ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
 
-// Dessiner un fond blanc semi-transparent
-ctx.fillStyle = 'rgba(255,255,255,0.85)';
-ctx.fillRect(
-  chartArea.right - textWidth - 4,
-  yPix - textHeight - 3,
-  textWidth,
-  textHeight
-);
+    // Texte "référence 1976-2005"
+    ctx.font = '11px IBM Plex Mono, monospace';
+    ctx.fillStyle = '#8FA0B8';
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'center';
+    ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
 
-// Dessiner le texte par-dessus
-ctx.fillStyle = '#000';
-ctx.fillText(label, chartArea.right - 4 - padding, yPix - 3 - padding);
+    // -----------------------------
+    // ⭐ TEXTE + FOND : moyenne de référence
+    // -----------------------------
+
+    const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+
+    // 👉 Position verticale de la ligne de référence
+    const yPix = y.getPixelForValue(d.moyenne_reference);
+
+    ctx.font = 'bold 15px var(--font-mono)';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+
+    // Mesurer la largeur du texte
+    const metrics = ctx.measureText(label);
+    const padding = 6;
+    const textWidth = metrics.width + padding * 2;
+    const textHeight = 22;
+
+    // Fond blanc semi-transparent
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillRect(
+      chartArea.right - textWidth - 4,
+      yPix - textHeight - 3,
+      textWidth,
+      textHeight
+    );
+
+    // Texte par-dessus
+    ctx.fillStyle = '#000';
+    ctx.fillText(label, chartArea.right - 4 - padding, yPix - 3 - padding);
+
+    ctx.restore();
+  }
+};
+
 
 
   if(charts['graph-national']) charts['graph-national'].destroy();
