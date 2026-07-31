@@ -1322,7 +1322,8 @@ async function chargerDonneesNationales(){
 
 function construireGraphNational(){
   const d = donneesNationales;
-  const dataMinAxe = d.annees[0].annee, dataMaxAxe = d.annees[d.annees.length-1].annee;
+  const dataMinAxe = d.annees[0].annee;
+  const dataMaxAxe = d.annees[d.annees.length-1].annee;
   const pointsValeurs = d.annees.map(a => ({x:a.annee, y:a.tm}));
   const mobile = moyenneMobile(d.annees, 'tm');
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
@@ -1330,83 +1331,122 @@ function construireGraphNational(){
 
   const bandePlugin = {
     id: 'bande_national',
+
     beforeDraw(chart){
-      const {ctx, chartArea, scales:{x, y}} = chart;
+      const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
-      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
+
+      const x1 = x.getPixelForValue(refDebut);
+      const x2 = x.getPixelForValue(refFin);
+
       ctx.save();
       ctx.fillStyle = 'rgba(143,160,184,0.22)';
-      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
-      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+
+      ctx.font = '11px "IBM Plex Mono", monospace';
       ctx.fillStyle = '#8FA0B8';
-      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
-      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center';
+      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1 + x2) / 2, chartArea.top + 6);
       ctx.restore();
-    };
+    },
 
-  // Ligne + fond + texte (au-dessus des courbes)
-  afterDatasetsDraw(chart){
-    const {ctx, chartArea, scales:{y}} = chart;
-    if(!chartArea) return;
+    afterDatasetsDraw(chart){
+      const {ctx, chartArea, scales:{y}} = chart;
+      if(!chartArea) return;
 
-    const yPix = y.getPixelForValue(d.moyenne_reference);
-    const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+      const yPix = y.getPixelForValue(d.moyenne_reference);
+      const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
 
-    ctx.save();
+      ctx.save();
 
-    // 1) Ligne horizontale
-    ctx.beginPath();
-    ctx.strokeStyle = '#8FA0B8';
-    ctx.lineWidth = 1.5;
-    ctx.moveTo(chartArea.left, yPix);
-    ctx.lineTo(chartArea.right, yPix);
-    ctx.stroke();
-
-       // 2) Mesure du texte et calcul du rectangle
-    ctx.font = 'bold 15px "IBM Plex Mono", monospace';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'bottom';
-    const metrics = ctx.measureText(label);
-    const paddingX = 8;
-    const paddingY = 6;
-    const textWidth = metrics.width;
-    const rectW = textWidth + paddingX * 2;
-    const rectH = 16 + paddingY * 2; // 16 approximatif pour la hauteur de la police
-
-    // Position du rectangle : légèrement au-dessus de la ligne pour éviter chevauchement
-    const rectX = chartArea.right - rectW - 6;
-    const rectY = yPix - rectH - 4;
-
-    // 3) Fond semi-opaque avec coins arrondis et ombre légère
-    ctx.fillStyle = 'rgba(255,255,255,0.92)';
-    ctx.shadowColor = 'rgba(0,0,0,0.12)';
-    ctx.shadowBlur = 6;
-    ctx.shadowOffsetY = 2;
-
-    // fonction utilitaire pour rectangle arrondi
-    const roundRect = (x, y, w, h, r) => {
-      const min = Math.min(w, h) / 2;
-      r = Math.min(r, min);
+      // Ligne horizontale
       ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.closePath();
-      ctx.fill();
-    };
+      ctx.strokeStyle = '#8FA0B8';
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(chartArea.left, yPix);
+      ctx.lineTo(chartArea.right, yPix);
+      ctx.stroke();
 
-    roundRect(rectX, rectY, rectW, rectH, 6);
+      // Texte + fond
+      ctx.font = 'bold 15px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'bottom';
 
-    // 4) Supprimer l'ombre pour le texte et dessiner le texte
-    ctx.shadowColor = 'transparent';
-    ctx.fillStyle = '#0b1220'; // texte sombre
-    ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
+      const metrics = ctx.measureText(label);
+      const paddingX = 8;
+      const paddingY = 6;
+      const textWidth = metrics.width;
+      const rectW = textWidth + paddingX * 2;
+      const rectH = 16 + paddingY * 2;
 
-    ctx.restore();
-  }
-};
+      const rectX = chartArea.right - rectW - 6;
+      const rectY = yPix - rectH - 4; // si chevauchement, diminuer: rectY -= 6
+
+      // Fond semi-opaque + ombre
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 2;
+
+      // rectangle arrondi
+      const roundRect = (x, y, w, h, r) => {
+        const min = Math.min(w, h) / 2;
+        r = Math.min(r, min);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        ctx.fill();
+      };
+
+      roundRect(rectX, rectY, rectW, rectH, 6);
+
+      // Texte (sans ombre)
+      ctx.shadowColor = 'transparent';
+      ctx.fillStyle = '#0b1220';
+      ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
+
+      ctx.restore();
+    }
+  };
+
+  if(charts['graph-national']) charts['graph-national'].destroy();
+  charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
+    type:'line',
+    data:{ datasets:[
+      {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
+       backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
+      {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
+       borderWidth:2.5, pointRadius:0, tension:0.3}
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      animation:{
+        duration:500,
+        easing:'easeOutQuart',
+        delay(context){
+          if(context.type === 'data' && context.mode === 'default'){
+            if(context.datasetIndex === 0) return context.dataIndex * 18;
+            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22;
+          }
+          return 0;
+        }
+      },
+      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}}},
+      scales:{
+        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
+        y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}}
+      }
+    },
+    plugins:[bandePlugin]
+  });
+}
+
+
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
