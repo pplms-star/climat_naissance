@@ -1341,17 +1341,72 @@ function construireGraphNational(){
       ctx.fillStyle = '#8FA0B8';
       ctx.textBaseline = 'top'; ctx.textAlign = 'center';
       ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
-
-      const yPix = y.getPixelForValue(d.moyenne_reference);
-      ctx.beginPath();
-      ctx.strokeStyle = '#8FA0B8'; ctx.lineWidth = 1.5;
-      ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
-      ctx.stroke();
-      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-      ctx.fillText(`moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`, chartArea.right-4, yPix-3);
       ctx.restore();
-    }
-  };
+    };
+
+  // Ligne + fond + texte (au-dessus des courbes)
+  afterDatasetsDraw(chart){
+    const {ctx, chartArea, scales:{y}} = chart;
+    if(!chartArea) return;
+
+    const yPix = y.getPixelForValue(d.moyenne_reference);
+    const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+
+    ctx.save();
+
+    // 1) Ligne horizontale
+    ctx.beginPath();
+    ctx.strokeStyle = '#8FA0B8';
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(chartArea.left, yPix);
+    ctx.lineTo(chartArea.right, yPix);
+    ctx.stroke();
+
+       // 2) Mesure du texte et calcul du rectangle
+    ctx.font = 'bold 15px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    const metrics = ctx.measureText(label);
+    const paddingX = 8;
+    const paddingY = 6;
+    const textWidth = metrics.width;
+    const rectW = textWidth + paddingX * 2;
+    const rectH = 16 + paddingY * 2; // 16 approximatif pour la hauteur de la police
+
+    // Position du rectangle : légèrement au-dessus de la ligne pour éviter chevauchement
+    const rectX = chartArea.right - rectW - 6;
+    const rectY = yPix - rectH - 4;
+
+    // 3) Fond semi-opaque avec coins arrondis et ombre légère
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.shadowColor = 'rgba(0,0,0,0.12)';
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetY = 2;
+
+    // fonction utilitaire pour rectangle arrondi
+    const roundRect = (x, y, w, h, r) => {
+      const min = Math.min(w, h) / 2;
+      r = Math.min(r, min);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    roundRect(rectX, rectY, rectW, rectH, 6);
+
+    // 4) Supprimer l'ombre pour le texte et dessiner le texte
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#0b1220'; // texte sombre
+    ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
+
+    ctx.restore();
+  }
+};
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
