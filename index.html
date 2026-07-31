@@ -972,25 +972,68 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.stroke();
         ctx.setLineDash([]);
       }
+ // Ligne horizontale : moyenne de la période de référence (façon RTBF)
+if (v1 != null) {
+  const yPix = y.getPixelForValue(v1);
+  const label = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`;
 
-      // Ligne horizontale : moyenne de la période de référence (façon RTBF)
-      if(v1 != null){
-        const yPix = y.getPixelForValue(v1);
-        ctx.strokeStyle = '#8FA0B8';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(chartArea.left, yPix);
-        ctx.lineTo(chartArea.right, yPix);
-        ctx.stroke();
-        ctx.font = '11px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#8FA0B8';
-        ctx.textBaseline = 'bottom';
-        ctx.textAlign = 'right';
-        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix - 3);
-      }
-      ctx.restore();
-    }
+  ctx.save();
+
+  // 1) Ligne horizontale
+  ctx.beginPath();
+  ctx.strokeStyle = '#8FA0B8';
+  ctx.lineWidth = 1.5;
+  ctx.moveTo(chartArea.left, yPix);
+  ctx.lineTo(chartArea.right, yPix);
+  ctx.stroke();
+
+  // 2) Préparer le texte
+  ctx.font = 'bold 13px "IBM Plex Mono", monospace'; // police plus lisible
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+
+  // 3) Mesurer le texte et calculer le rectangle
+  const metrics = ctx.measureText(label);
+  const paddingX = 8;
+  const paddingY = 6;
+  const textWidth = metrics.width;
+  const rectW = textWidth + paddingX * 2;
+  const rectH = 14 + paddingY * 2; // 14 ≈ hauteur de la police
+
+  // Positionner le rectangle légèrement au-dessus de la ligne pour éviter chevauchement
+  const rectX = chartArea.right - rectW - 6;
+  const rectY = yPix - rectH - 6; // ajuste -6 si besoin
+
+  // 4) Fond semi-opaque avec ombre légère (arrondi)
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.shadowColor = 'rgba(0,0,0,0.12)';
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 2;
+
+  // rectangle arrondi
+  const roundRect = (x, y, w, h, r) => {
+    const min = Math.min(w, h) / 2;
+    r = Math.min(r, min);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+    ctx.fill();
   };
+  roundRect(rectX, rectY, rectW, rectH, 6);
+
+  // 5) Texte (sans ombre)
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = '#0b1220';
+  ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
+
+  ctx.restore();
+}
+
+      
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
 
