@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comment le climat a t-il évolué depuis ta naissance ?</title>
+<title>Le climat a-t-il changé depuis ta naissance ?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -234,7 +234,7 @@
     display:flex;
     gap:20px;
     font-family:var(--font-mono);
-    font-size:15px;
+    font-size:11px;
     color:var(--text-muted);
     margin-top:14px;
     flex-wrap:wrap;
@@ -316,19 +316,19 @@
 
   <header class="hero">
     <p class="eyebrow">Données Météo-France · relevés quotidiens</p>
-    <h1>Comment le climat a-til évolué depuis ta naissance ?</h1>
+    <h1>Le climat a-t-il changé depuis ta naissance ?</h1>
     <div id="stripes-hero" aria-hidden="true"></div>
     <div class="stripes-annees" id="stripes-annees" style="display:none;"></div>
 
     <p class="madlib">
       Tu es né·e en <span id="annee-affichee" class="annee-live">19XX</span>
-      et tu veux savoir comment le climat a évolué à
+      et tu veux savoir ce qu'il en est à
       <span class="commune-autocomplete-wrap">
         <input type="text" id="commune-recherche" class="commune-input"
                placeholder="tape ta commune…" autocomplete="off">
         <input type="hidden" id="commune">
         <div id="commune-suggestions" class="commune-suggestions"></div>
-      </span>
+      </span>.
     </p>
 
     <div class="slider-wrap">
@@ -341,13 +341,13 @@
     <p class="texte" id="note-station" style="display:none;margin-top:-8px;font-size:13px;"></p>
 
     <div class="scroll-cue" id="indice-scroll" style="visibility:hidden;">
-      <span class="arrow">↓</span>
+      <span class="arrow">↓</span> continue à lire, le récit se construit avec tes réponses
     </div>
   </header>
 
   <section id="sec-national" class="reveal">
     <p class="eyebrow">Étape 1 · le contexte national</p>
-    <h2>Comment le climat a évolué en France ?</h2>
+    <h2>D'abord, la France entière</h2>
     <p class="texte" id="texte-national-intro">
       Avant de parler de ta commune, regardons l'évolution du climat à l'échelle de tout le pays.
       Voici la température moyenne annuelle en France depuis 1958, mesurée par l'Indicateur
@@ -361,23 +361,19 @@
       en arrière, représentative du climat "d'avant" le réchauffement le plus marqué.
     </div>
 
-<div class="chart-box">
-  <div style="position:relative;height:340px;">
-
-    <canvas id="graph-national"></canvas>
-
-    <div class="legende-periodes"
-         style="position:absolute; bottom:10px; left:0; z-index:10;">
-      <span><i class="pastille" style="background:var(--text-muted)"></i>période de référence 1976-2005</span>
-      <span><i class="pastille" style="background:none;font-size:20px;border-top:2px solid var(--text-muted)"></i>moyenne de référence</span>
+    <div class="chart-box">
+      <div style="position:relative;height:340px;">
+        <canvas id="graph-national"></canvas>
+      </div>
+      <div class="legende-periodes">
+        <span><i class="pastille" style="background:var(--text-muted)"></i>période de référence 1976-2005</span>
+        <span><i class="pastille" style="background:none;border-top:2px solid var(--text-muted)"></i>moyenne de référence</span>
+      </div>
     </div>
 
-  </div>
-</div>
-
-
     <p class="texte reveal" id="texte-national-transition" style="margin-top:32px;">
-     Et si on regarde uniquement les anomalies à la température moyenne de référence on obtient :  — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
+      Continue à scroller : le même graphique se transforme maintenant en écart à cette référence,
+      année par année — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
       que la normale, <span style="color:var(--warm)">rouge</span> pour les années plus chaudes.
     </p>
 
@@ -1332,7 +1328,21 @@ function construireGraphNational(){
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
 
-  const yPix = y.getPixelForValue(d.moyenne_reference);
+  const bandePlugin = {
+    id: 'bande_national',
+    beforeDraw(chart){
+      const {ctx, chartArea, scales:{x, y}} = chart;
+      if(!chartArea) return;
+      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
+      ctx.save();
+      ctx.fillStyle = 'rgba(143,160,184,0.22)';
+      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
+      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#8FA0B8';
+      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
+
+      const yPix = y.getPixelForValue(d.moyenne_reference);
       ctx.beginPath();
       ctx.strokeStyle = '#8FA0B8'; ctx.lineWidth = 1.5;
       ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
@@ -1342,76 +1352,6 @@ function construireGraphNational(){
       ctx.restore();
     }
   };
-
-  const bandePlugin = {
-  id: 'bande_national',
-
-  // Bande de référence dessinée avant les courbes
-  beforeDraw(chart){
-    const {ctx, chartArea, scales:{x}} = chart;
-    if(!chartArea) return;
-
-    const x1 = x.getPixelForValue(refDebut);
-    const x2 = x.getPixelForValue(refFin);
-
-    ctx.save();
-    ctx.fillStyle = 'rgba(143,160,184,0.22)';
-    ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
-
-    ctx.font = '11px IBM Plex Mono, monospace';
-    ctx.fillStyle = '#8FA0B8';
-    ctx.textBaseline = 'top';
-    ctx.textAlign = 'center';
-    ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
-    ctx.restore();
-  },
-
-  // Ligne + fond + texte dessinés APRÈS les courbes
-  afterDatasetsDraw(chart){
-    const {ctx, chartArea, scales:{y}} = chart;
-    if(!chartArea) return;
-
-    const yPix = y.getPixelForValue(d.moyenne_reference);
-    const label = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
-
-    ctx.save();
-
-    // Ligne horizontale
-    ctx.beginPath();
-    ctx.strokeStyle = '#8FA0B8';
-    ctx.lineWidth = 1.5;
-    ctx.moveTo(chartArea.left, yPix);
-    ctx.lineTo(chartArea.right, yPix);
-    ctx.stroke();
-
-    // Style du texte
-    ctx.font = 'bold 15px IBM Plex Mono, monospace';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'bottom';
-
-    // Mesure du texte
-    const metrics = ctx.measureText(label);
-    const padding = 6;
-    const textWidth = metrics.width + padding * 2;
-    const textHeight = 22;
-
-    // Fond blanc AU-DESSUS des courbes
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.fillRect(
-      chartArea.right - textWidth - 4,
-      yPix - textHeight - 3,
-      textWidth,
-      textHeight
-    );
-
-    // Texte par-dessus
-    ctx.fillStyle = '#000';
-    ctx.fillText(label, chartArea.right - 4 - padding, yPix - 3 - padding);
-
-    ctx.restore();
-  }
-};
-
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
