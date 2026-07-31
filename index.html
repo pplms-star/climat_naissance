@@ -928,114 +928,69 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
   const bandesEtLignesEtat = {opacite: 0}; // 0 = invisible, 1 = pleinement visible (fondu progressif)
 
   const bandesPlugin = {
-  id: 'bandes_' + idCanvas,
-  beforeDraw(chart){
-    if(bandesEtLignesEtat.opacite <= 0) return;
-    const {ctx, chartArea, scales:{x}} = chart;
-    if(!chartArea) return;
-    const x1 = x.getPixelForValue(Math.max(ref.start, dataMinAxe));
-    const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
-    ctx.save();
-    ctx.globalAlpha = bandesEtLignesEtat.opacite;
-    ctx.fillStyle = 'rgba(143,160,184,0.22)'; // gris = période de référence
-    ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+    id: 'bandes_' + idCanvas,
+    beforeDraw(chart){
+      if(bandesEtLignesEtat.opacite <= 0) return;
+      const {ctx, chartArea, scales:{x}} = chart;
+      if(!chartArea) return;
+      const x1 = x.getPixelForValue(Math.max(ref.start, dataMinAxe));
+      const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
+      ctx.save();
+      ctx.globalAlpha = bandesEtLignesEtat.opacite;
+      ctx.fillStyle = 'rgba(143,160,184,0.22)'; // gris = période de référence
+      ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
 
-    // Étiquette en haut de la bande
-    ctx.font = '11px "IBM Plex Mono", monospace';
-    ctx.fillStyle = '#8FA0B8';
-    ctx.textBaseline = 'top';
-    ctx.textAlign = 'center';
-    const centre = (x1 + x2) / 2;
-    ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
-    ctx.restore();
-  }
-};
-
-const lignePlugin = {
-  id: 'ligne_' + idCanvas,
-  afterDraw(chart){
-    if(bandesEtLignesEtat.opacite <= 0) return;
-    const {ctx, chartArea, scales:{x, y}} = chart;
-    if(!chartArea) return;
-    ctx.save();
-    ctx.globalAlpha = bandesEtLignesEtat.opacite;
-
-    // Trait vertical : année de naissance
-    if(anneeNaissance >= dataMinAxe && anneeNaissance <= dataMaxAxe){
-      const xPix = x.getPixelForValue(anneeNaissance);
-      ctx.strokeStyle = '#EAEFF3';
-      ctx.setLineDash([4,3]);
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(xPix, chartArea.top);
-      ctx.lineTo(xPix, chartArea.bottom);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      // Étiquette en haut de la bande
+      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#8FA0B8';
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center';
+      const centre = (x1 + x2) / 2;
+      ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
+      ctx.restore();
     }
+  };
 
-    // Ligne horizontale : moyenne de la période de référence (façon RTBF)
-    if (v1 != null) {
-      const yPix = y.getPixelForValue(v1);
-      const label = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`;
+  const lignePlugin = {
+    id: 'ligne_' + idCanvas,
+    afterDraw(chart){
+      if(bandesEtLignesEtat.opacite <= 0) return;
+      const {ctx, chartArea, scales:{x, y}} = chart;
+      if(!chartArea) return;
+      ctx.save();
+      ctx.globalAlpha = bandesEtLignesEtat.opacite;
 
-      // 1) Ligne horizontale
-      ctx.beginPath();
-      ctx.strokeStyle = '#8FA0B8';
-      ctx.lineWidth = 1.5;
-      ctx.moveTo(chartArea.left, yPix);
-      ctx.lineTo(chartArea.right, yPix);
-      ctx.stroke();
-
-      // 2) Préparer le texte
-      ctx.font = 'bold 13px "IBM Plex Mono", monospace';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'bottom';
-
-      // 3) Mesurer le texte et calculer le rectangle
-      const metrics = ctx.measureText(label);
-      const paddingX = 8;
-      const paddingY = 6;
-      const textWidth = metrics.width;
-      const rectW = textWidth + paddingX * 2;
-      const rectH = 14 + paddingY * 2; // 14 ≈ hauteur de la police
-
-      // Positionner le rectangle légèrement au-dessus de la ligne pour éviter chevauchement
-      const rectX = chartArea.right - rectW - 6;
-      const rectY = yPix - rectH - 6; // ajuste si besoin
-
-      // 4) Fond semi-opaque avec ombre légère (arrondi)
-      ctx.fillStyle = 'rgba(255,255,255,0.94)';
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 6;
-      ctx.shadowOffsetY = 2;
-
-      // rectangle arrondi
-      const roundRect = (x, y, w, h, r) => {
-        const min = Math.min(w, h) / 2;
-        r = Math.min(r, min);
+      // Trait vertical : année de naissance
+      if(anneeNaissance >= dataMinAxe && anneeNaissance <= dataMaxAxe){
+        const xPix = x.getPixelForValue(anneeNaissance);
+        ctx.strokeStyle = '#EAEFF3';
+        ctx.setLineDash([4,3]);
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.arcTo(x + w, y, x + w, y + h, r);
-        ctx.arcTo(x + w, y + h, x, y + h, r);
-        ctx.arcTo(x, y + h, x, y, r);
-        ctx.arcTo(x, y, x + w, y, r);
-        ctx.closePath();
-        ctx.fill();
-      };
-      roundRect(rectX, rectY, rectW, rectH, 6);
+        ctx.moveTo(xPix, chartArea.top);
+        ctx.lineTo(xPix, chartArea.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
 
-      // 5) Texte (sans ombre)
-      ctx.shadowColor = 'transparent';
-      ctx.fillStyle = '#0b1220';
-      ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
+      // Ligne horizontale : moyenne de la période de référence (façon RTBF)
+      if(v1 != null){
+        const yPix = y.getPixelForValue(v1);
+        ctx.strokeStyle = '#8FA0B8';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, yPix);
+        ctx.lineTo(chartArea.right, yPix);
+        ctx.stroke();
+        ctx.font = '11px IBM Plex Mono, monospace';
+        ctx.fillStyle = '#8FA0B8';
+        ctx.textBaseline = 'bottom';
+        ctx.textAlign = 'right';
+        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix - 3);
+      }
+      ctx.restore();
     }
-
-    ctx.restore();
-  }
-};
-
-
- 
+  };
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
 
