@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le climat a-t-il changé depuis ta naissance ?</title>
+<title>Comment le climat a t-il évolué depuis ta naissance ?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -316,19 +316,19 @@
 
   <header class="hero">
     <p class="eyebrow">Données Météo-France · relevés quotidiens</p>
-    <h1>Le climat a-t-il changé depuis ta naissance ?</h1>
+    <h1>Comment le climat a-til évolué depuis ta naissance ?</h1>
     <div id="stripes-hero" aria-hidden="true"></div>
     <div class="stripes-annees" id="stripes-annees" style="display:none;"></div>
 
     <p class="madlib">
       Tu es né·e en <span id="annee-affichee" class="annee-live">19XX</span>
-      et tu veux savoir ce qu'il en est à
+      et tu veux savoir comment le climat a évolué à
       <span class="commune-autocomplete-wrap">
         <input type="text" id="commune-recherche" class="commune-input"
                placeholder="tape ta commune…" autocomplete="off">
         <input type="hidden" id="commune">
         <div id="commune-suggestions" class="commune-suggestions"></div>
-      </span>.
+      </span>
     </p>
 
     <div class="slider-wrap">
@@ -341,13 +341,13 @@
     <p class="texte" id="note-station" style="display:none;margin-top:-8px;font-size:13px;"></p>
 
     <div class="scroll-cue" id="indice-scroll" style="visibility:hidden;">
-      <span class="arrow">↓</span> continue à lire, le récit se construit avec tes réponses
+      <span class="arrow">↓</span>
     </div>
   </header>
 
   <section id="sec-national" class="reveal">
     <p class="eyebrow">Étape 1 · le contexte national</p>
-    <h2>D'abord, la France entière</h2>
+    <h2>Comment le climat a évolué en France ?</h2>
     <p class="texte" id="texte-national-intro">
       Avant de parler de ta commune, regardons l'évolution du climat à l'échelle de tout le pays.
       Voici la température moyenne annuelle en France depuis 1958, mesurée par l'Indicateur
@@ -365,15 +365,14 @@
       <div style="position:relative;height:340px;">
         <canvas id="graph-national"></canvas>
       </div>
-      <div class="legende-periodes">
+      <div class="legende-periodes"style="position: absolute; top: 10px; left: 10px; z-index: 1;">
         <span><i class="pastille" style="background:var(--text-muted)"></i>période de référence 1976-2005</span>
-        <span><i class="pastille" style="background:none;border-top:2px solid var(--text-muted)"></i>moyenne de référence</span>
+        <span><i class="pastille" style="background:none;font-size:20px;border-top:2px solid var(--text-muted)"></i>moyenne de référence</span>
       </div>
     </div>
 
     <p class="texte reveal" id="texte-national-transition" style="margin-top:32px;">
-      Continue à scroller : le même graphique se transforme maintenant en écart à cette référence,
-      année par année — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
+     Et si on regarde uniquement les anomalies à la température moyenne de référence on obtient :  — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
       que la normale, <span style="color:var(--warm)">rouge</span> pour les années plus chaudes.
     </p>
 
