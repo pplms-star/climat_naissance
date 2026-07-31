@@ -1322,137 +1322,48 @@ async function chargerDonneesNationales(){
 
 function construireGraphNational(){
   const d = donneesNationales;
-  const dataMinAxe = d.annees[0].annee;
-  const dataMaxAxe = d.annees[d.annees.length-1].annee;
+  const dataMinAxe = d.annees[0].annee, dataMaxAxe = d.annees[d.annees.length-1].annee;
   const pointsValeurs = d.annees.map(a => ({x:a.annee, y:a.tm}));
   const mobile = moyenneMobile(d.annees, 'tm');
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
 
-  // état d'opacité pour fondu (si tu as déjà une variable globale, supprime cette ligne)
-  const bandesEtLignesEtat = { opacite: 1 };
-
-  const bandesPlugin = {
+  const bandePlugin = {
     id: 'bande_national',
     beforeDraw(chart){
-      if(bandesEtLignesEtat.opacite <= 0) return;
-      const {ctx, chartArea, scales:{x}} = chart;
+      const {ctx, chartArea, scales:{x, y}} = chart;
       if(!chartArea) return;
-
-      const x1 = x.getPixelForValue(Math.max(refDebut, dataMinAxe));
-      const x2 = x.getPixelForValue(Math.min(refFin, dataMaxAxe));
-
+      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
       ctx.save();
-      ctx.globalAlpha = bandesEtLignesEtat.opacite;
       ctx.fillStyle = 'rgba(143,160,184,0.22)';
-      ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
-
-      ctx.font = '11px "IBM Plex Mono", monospace';
+      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
+      ctx.font = '11px IBM Plex Mono, monospace';
       ctx.fillStyle = '#8FA0B8';
-      ctx.textBaseline = 'top';
-      ctx.textAlign = 'center';
-      const centre = (x1 + x2) / 2;
-      ctx.fillText(`référence ${refDebut}-${refFin}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 6);
-      ctx.restore();
-    }
-  };
+      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
 
-  const lignePlugin = {
-    id: 'ligne_national',
-    // afterDraw pour s'assurer d'être après tout le rendu du chart
-    afterDraw(chart){
-      if(bandesEtLignesEtat.opacite <= 0) return;
-      const {ctx, chartArea, scales:{y}} = chart;
-      if(!chartArea) return;
-
-      // position verticale de la moyenne de référence
-      const moyenneRef = d.moyenne_reference;
-      if(moyenneRef == null) return;
-
-      const yPix = y.getPixelForValue(moyenneRef);
-      const label = `moyenne de référence : ${moyenneRef.toFixed(1)}°C`;
-
-      // 1) Ligne horizontale (on la dessine en opacité liée si souhaité)
-      ctx.save();
-      ctx.globalAlpha = bandesEtLignesEtat.opacite;
+      const yPix = y.getPixelForValue(d.moyenne_reference);
       ctx.beginPath();
-      ctx.strokeStyle = '#8FA0B8';
-      ctx.lineWidth = 1.5;
-      ctx.moveTo(chartArea.left, yPix);
-      ctx.lineTo(chartArea.right, yPix);
+      ctx.strokeStyle = '#8FA0B8'; ctx.lineWidth = 1.5;
+      ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
-      ctx.restore();
-
-      // 2) Fond + texte AU-DESSUS (forcer opacité et composition)
-      ctx.save();
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = 'source-over';
-
-      // Préparer le texte
-      ctx.font = 'bold 15px "IBM Plex Mono", monospace';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'bottom';
-
-      // Mesurer et calculer rectangle
-      const metrics = ctx.measureText(label);
-      const paddingX = 8;
-      const paddingY = 6;
-      const textWidth = metrics.width;
-      const rectW = textWidth + paddingX * 2;
-      const rectH = 18 + paddingY * 2; // hauteur approximative adaptée à la font-size
-
-      // Position : légèrement au-dessus de la ligne pour éviter chevauchement
-      const rectX = chartArea.right - rectW - 6;
-      let rectY = yPix - rectH - 6;
-
-      // Si le rectangle dépasse le haut du chart, le placer en dessous de la ligne
-      if(rectY < chartArea.top + 4) rectY = yPix + 6;
-
-      // Fond semi-opaque avec ombre légère
-      ctx.fillStyle = 'rgba(255,255,255,0.96)';
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 6;
-      ctx.shadowOffsetY = 2;
-
-      // rectangle arrondi
-      const roundRect = (x0, y0, w, h, r) => {
-        const min = Math.min(w, h) / 2;
-        r = Math.min(r, min);
-        ctx.beginPath();
-        ctx.moveTo(x0 + r, y0);
-        ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r);
-        ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r);
-        ctx.arcTo(x0, y0 + h, x0, y0, r);
-        ctx.arcTo(x0, y0, x0 + w, y0, r);
-        ctx.closePath();
-        ctx.fill();
-      };
-      roundRect(rectX, rectY, rectW, rectH, 6);
-
-      // Texte (sans ombre)
-      ctx.shadowColor = 'transparent';
-      ctx.fillStyle = '#0b1220';
-      ctx.fillText(label, rectX + rectW - paddingX, rectY + rectH - paddingY - 2);
-
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`, chartArea.right-4, yPix-3);
       ctx.restore();
     }
   };
 
-  // Crée le chart (une seule fois)
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
     type:'line',
-    data:{
-      datasets:[
-        {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
-         backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
-        {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
-         borderWidth:2.5, pointRadius:0, tension:0.3}
-      ]
-    },
+    data:{ datasets:[
+      {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
+       backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
+      {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
+       borderWidth:2.5, pointRadius:0, tension:0.3}
+    ]},
     options:{
-      responsive:true,
-      maintainAspectRatio:false,
+      responsive:true, maintainAspectRatio:false,
       animation:{
         duration:500,
         easing:'easeOutQuart',
@@ -1464,20 +1375,16 @@ function construireGraphNational(){
           return 0;
         }
       },
-      plugins:{
-        legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}}
-      },
+      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}}},
       scales:{
         x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
         y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}}
       }
     },
-    plugins:[bandesPlugin, lignePlugin]
+    plugins:[bandePlugin]
   });
 }
 
-
-  
 function construireGraphNationalBarres(){
   const d = donneesNationales;
   const [refDebut, refFin] = d.periode_reference;
