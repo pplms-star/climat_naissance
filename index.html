@@ -484,32 +484,9 @@
       <p class="eyebrow">Étape 8 · et ailleurs ?</p>
       <h2>Comparer avec une autre commune</h2>
       <p class="texte">
-        Choisis une deuxième commune pour comparer son climat actuel (les 10 dernières
-        années disponibles) à
-        celui de <span id="nom-commune-a">ta commune</span>, pour la même année de
-        naissance.
+        (Section temporairement retirée — comparer deux communes proches n'apportait pas
+        grand-chose de plus, elle reviendra sous une forme plus pertinente si besoin.)
       </p>
-      <div class="field" style="max-width:320px;margin:16px 0 8px;">
-        <label for="commune-comparaison-recherche" style="display:block;font-size:12px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">Comparer avec</label>
-        <span class="commune-autocomplete-wrap" style="display:block;">
-          <input type="text" id="commune-comparaison-recherche" class="commune-input"
-                 style="color:var(--text); border-bottom-color:var(--panel-border); width:100%;"
-                 placeholder="tape une commune…" autocomplete="off">
-          <input type="hidden" id="commune-comparaison">
-          <div id="commune-comparaison-suggestions" class="commune-suggestions"></div>
-        </span>
-      </div>
-      <div class="chart-box" id="bloc-comparaison" style="display:none;">
-        <div style="position:relative;height:380px;">
-          <canvas id="graph-comparaison"></canvas>
-        </div>
-        <p class="texte" style="font-size:12px;margin-top:10px;" id="note-periodes-comparaison"></p>
-        <p class="texte" style="font-size:12px;">
-          Chaque axe est normalisé (la valeur la plus haute des deux communes = 100%) pour
-          rester lisible malgré des unités différentes (°C, jours/an) — survole un point
-          pour voir la vraie valeur.
-        </p>
-      </div>
     </section>
 
   </div>
@@ -551,15 +528,12 @@ async function init(){
   dessinerStripesDecor();
   configurerAutocompleteCommune('commune-recherche', 'commune', 'commune-suggestions',
     () => COMMUNES);
-  configurerAutocompleteCommune('commune-comparaison-recherche', 'commune-comparaison', 'commune-comparaison-suggestions',
-    () => COMMUNES.filter(c => c.commune !== document.getElementById('commune').value));
   document.getElementById('commune').addEventListener('change', changerCommune);
 
   inputAnnee.addEventListener('input', () => {
     document.getElementById('annee-affichee').textContent = inputAnnee.value;
     if(donneesCommuneActuelle) recalculerAvecNouvelleAnnee();
   });
-  document.getElementById('commune-comparaison').addEventListener('change', lancerComparaison);
   configurerReveal();
 }
 
@@ -746,13 +720,6 @@ async function changerCommune(){
       dejaCharge = true;
       setTimeout(()=> document.getElementById('sec-national').scrollIntoView({behavior:'smooth', block:'start'}), 400);
     }
-
-    // Prépare la section de comparaison (remise à zéro ; le filtre exclut déjà
-    // automatiquement la commune actuelle via obtenirCommunes())
-    document.getElementById('nom-commune-a').textContent = entreeCommune.commune;
-    document.getElementById('commune-comparaison-recherche').value = '';
-    document.getElementById('commune-comparaison').value = '';
-    document.getElementById('bloc-comparaison').style.display = 'none';
   }catch(err){
     console.error(err);
   }
@@ -1195,114 +1162,6 @@ function construireAvenir(data, annees, actuel){
       <div class="value">${projVal != null ? projVal.toFixed(ind.dec) : '—'} ${ind.unite}</div>
       <div class="sub">pas de suivi historique équivalent sur ce site</div>`;
     cartes.appendChild(div);
-  });
-}
-async function lancerComparaison(){
-  const communeVal = document.getElementById('commune-comparaison').value;
-  const blocComp = document.getElementById('bloc-comparaison');
-  if(!communeVal || !donneesCommuneActuelle){
-    blocComp.style.display = 'none';
-    return;
-  }
-
-  const entreeCommune = COMMUNES.find(c => c.commune === communeVal);
-  const station = STATIONS.find(s => s.id === entreeCommune.station_id);
-  if(!station) return;
-
-  try{
-    const res = await fetch(station.fichier);
-    const donneesB = await res.json();
-    donneesB.commune = entreeCommune.commune;
-
-    const anneeNaissance = parseInt(document.getElementById('annee').value, 10);
-    construireComparaison(donneesCommuneActuelle, donneesB, anneeNaissance);
-    blocComp.style.display = 'block';
-  }catch(err){
-    console.error(err);
-  }
-}
-
-function construireComparaison(donneesA, donneesB, anneeNaissance){
-  const indicateurs = [
-    {cle:'ete_tm_moy', label:'Été (°C)'},
-    {cle:'tx_moy', label:'Année (°C)'},
-    {cle:'nuits_tropicales', label:'Nuits tropicales'},
-    {cle:'jours_chauds_30', label:'Jours >30°C'},
-    {cle:'jours_gel', label:'Jours de gel'},
-    {cle:'jours_vague_chaleur', label:'Vagues de chaleur'},
-  ];
-  const periodeDe = (donnees) => {
-    const dMax = donnees.annees[donnees.annees.length-1].annee;
-    const dMin = donnees.annees[0].annee;
-    return {start: Math.max(dMin, dMax - 9), end: dMax};
-  };
-  const periodeA = periodeDe(donneesA);
-  const periodeB = periodeDe(donneesB);
-
-  document.getElementById('note-periodes-comparaison').innerHTML =
-    `Période "actuelle" utilisée : ${donneesA.commune} = ${periodeA.start}–${periodeA.end},
-     ${donneesB.commune} = ${periodeB.start}–${periodeB.end}` +
-    (periodeA.start !== periodeB.start || periodeA.end !== periodeB.end
-      ? ' (différentes car les deux stations n\'ont pas le même historique disponible).'
-      : '.');
-
-  const valeursA = indicateurs.map(ind => moyennePeriode(donneesA.annees, ind.cle, periodeA.start, periodeA.end));
-  const valeursB = indicateurs.map(ind => moyennePeriode(donneesB.annees, ind.cle, periodeB.start, periodeB.end));
-
-  // Normalisation par axe : la plus grande des deux valeurs = 100
-  const normA = valeursA.map((v,i) => {
-    const maxi = Math.max(Math.abs(v ?? 0), Math.abs(valeursB[i] ?? 0)) || 1;
-    return (v ?? 0) / maxi * 100;
-  });
-  const normB = valeursB.map((v,i) => {
-    const maxi = Math.max(Math.abs(v ?? 0), Math.abs(valeursA[i] ?? 0)) || 1;
-    return (v ?? 0) / maxi * 100;
-  });
-
-  if(charts['comparaison']) charts['comparaison'].destroy();
-  charts['comparaison'] = new Chart(document.getElementById('graph-comparaison'), {
-    type:'radar',
-    data:{
-      labels: indicateurs.map(i => i.label),
-      datasets:[
-        {
-          label: donneesA.commune, data: normA,
-          borderColor:'#E8A33D', backgroundColor:'rgba(232,163,61,0.15)',
-          pointBackgroundColor:'#E8A33D',
-          _valeursReelles: valeursA,
-        },
-        {
-          label: donneesB.commune, data: normB,
-          borderColor:'#3E7CB1', backgroundColor:'rgba(62,124,177,0.15)',
-          pointBackgroundColor:'#3E7CB1',
-          _valeursReelles: valeursB,
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{display:true, position:'top', labels:{color:'#8FA0B8'}},
-        tooltip:{
-          callbacks:{
-            label(ctx){
-              const reel = ctx.dataset._valeursReelles[ctx.dataIndex];
-              return `${ctx.dataset.label} : ${reel != null ? reel.toFixed(1) : '—'}`;
-            }
-          }
-        }
-      },
-      scales:{
-        r:{
-          angleLines:{color:'#233047'},
-          grid:{color:'#233047'},
-          pointLabels:{color:'#8FA0B8', font:{size:11}},
-          ticks:{display:false},
-          suggestedMin:0, suggestedMax:100
-        }
-      }
-    }
   });
 }
 
