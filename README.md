@@ -192,10 +192,6 @@ ville éloignée, ou à la moyenne nationale de l'étape 1).
 3. Chaque `git push` déclenche un redéploiement automatique.
 
 ## Pistes d'évolution possibles
-
-- Récupérer la tranche SAFRAN 1960-1979 manquante pour un historique
-  complet depuis le début de la réanalyse (pas bloquant : la période de
-  référence 1976-2005 est déjà entièrement couverte).
 - Étendre au-delà de l'Alsace avec le même pipeline SAFRAN.
 - Repenser une comparaison entre communes (voir "Fonctionnalité retirée").
 - Ajouter un indicateur de risque de feu de forêt en historique (pas
