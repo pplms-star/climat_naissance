@@ -938,8 +938,8 @@ const bandesPlugin = {
       ctx.restore();
     },
          
-     // Étiquette en haut de la bande
-     afterDatasetsDraw(chart){
+    // Étiquette en haut de la bande
+    afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
@@ -948,20 +948,35 @@ const bandesPlugin = {
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
 
       ctx.save();
-      // On force l'opacité à 1.0 (ou une valeur fixe) pour que le texte reste net et opaque par-dessus les données
       ctx.globalAlpha = 1.0; 
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
+
       const centre = (x1 + x2) / 2;
-      ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
+      const xTexte = Math.min(Math.max(centre, x1 + 4), x2 - 4);
+      const yTexte = chartArea.top + 4;
+      const texteBande = `référence : ${ref.start}–${ref.end}`;
+
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+
+      ctx.strokeStyle = '#FFFFFF'; 
+      ctx.lineWidth = 3.5;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(texteBande, xTexte, yTexte);
+
+      ctx.shadowColor = 'transparent'; 
+      ctx.fillStyle = '#c3cbd5';
+      ctx.fillText(texteBande, xTexte, yTexte);
 
       ctx.restore();
     }
- };
+};
 
-  const lignePlugin = {
+const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
@@ -974,7 +989,7 @@ const bandesPlugin = {
       if(anneeNaissance >= dataMinAxe && anneeNaissance <= dataMaxAxe){
         const xPix = x.getPixelForValue(anneeNaissance);
         ctx.strokeStyle = '#EAEFF3';
-        ctx.setLineDash([4,3]);
+        ctx.setLineDash([4, 3]); // <-- CORRIGÉ : Remis les valeurs des pointillés
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(xPix, chartArea.top);
@@ -993,15 +1008,33 @@ const bandesPlugin = {
         ctx.moveTo(chartArea.left, yPix);
         ctx.lineTo(chartArea.right, yPix);
         ctx.stroke();
+
         ctx.font = '11px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#c3cbd5';
         ctx.textBaseline = 'top';
         ctx.textAlign = 'right';
-        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
+
+        const xLigne = chartArea.right - 4;
+        const yLigne = yPix + 3;
+        const texteLigne = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`;
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+
+        ctx.strokeStyle = '#FFFFFF'; 
+        ctx.lineWidth = 3.5;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(texteLigne, xLigne, yLigne);
+
+        ctx.shadowColor = 'transparent'; 
+        ctx.fillStyle = '#c3cbd5';
+        ctx.fillText(texteLigne, xLigne, yLigne);
       }
-        ctx.restore();
-      }
-    };
+      ctx.restore();
+    }
+};
+
 
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
