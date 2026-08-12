@@ -940,7 +940,8 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
 
       // Étiquette en haut de la bande
-     afterDatasetsDraw(chart){
+         // Dans la partie afterDatasetsDraw(chart) de bandesPlugin :
+    afterDatasetsDraw(chart) {
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
@@ -949,18 +950,39 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
 
       ctx.save();
-      // On force l'opacité à 1.0 (ou une valeur fixe) pour que le texte reste net et opaque par-dessus les données
       ctx.globalAlpha = 1.0; 
+
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
+      
       const centre = (x1 + x2) / 2;
-      ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
+      const xTexte = Math.min(Math.max(centre, x1 + 4), x2 - 4);
+      const yTexte = chartArea.top + 4;
+      const texte = `référence : ${ref.start}–${ref.end}`;
 
+      // --- CONFIGURATION DE L'OMBRE ---
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)'; // Ombre noire très douce
+      ctx.shadowBlur = 3;                      // Flou de l'ombre
+      ctx.shadowOffsetX = 1;                   // Décalage horizontal
+      ctx.shadowOffsetY = 1;                   // Décalage vertical
+
+      // --- CONFIGURATION DU CONTOUR ---
+      ctx.strokeStyle = '#FFFFFF';             // Couleur du fond de votre graphique
+      ctx.lineWidth = 3.5;                     // Épaisseur du contour
+      ctx.lineJoin = 'round';
+      
+      // On dessine le contour (l'ombre s'applique aussi dessus automatiquement)
+      ctx.strokeText(texte, xTexte, yTexte);
+
+      // --- DESSIN DU TEXTE PRINCIPAL ---
+      ctx.shadowColor = 'transparent';         // On coupe l'ombre pour le texte final
+      ctx.fillStyle = '#c3cbd5';
+      ctx.fillText(texte, xTexte, yTexte);
+      
       ctx.restore();
     }
- };
+
   const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDatasetsDraw(chart){
