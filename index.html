@@ -957,9 +957,18 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       ctx.textAlign = 'center';
       const centre = (x1 + x2) / 2;
       ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
+
+      // --- AJOUT DU CONTOUR (EFFET HALO) ---
+      ctx.strokeStyle = '#FFFFFF'; // Mettez ici la couleur de fond de votre graphique (ex: #FFFFFF)
+      ctx.lineWidth = 4;           // Épaisseur du contour
+      ctx.lineJoin = 'round';      // Arrondit les angles du contour pour éviter les pointes
+      ctx.strokeText(texte, xTexte, chartArea.top + 4);
+
+       // --- TRACÉ DU TEXTE ORIGINAL ---
+      ctx.fillStyle = '#c3cbd5';
+      ctx.fillText(texte, xTexte, chartArea.top + 4);
       ctx.restore();
     }
-  };
 
   const lignePlugin = {
     id: 'ligne_' + idCanvas,
