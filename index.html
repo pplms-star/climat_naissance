@@ -1292,13 +1292,13 @@ const bandePlugin = {
 
       // Contour blanc autour des lettres
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.0;
       ctx.lineJoin = 'round';
       ctx.strokeText(texteLigne, xTexteLigne, yTexteLigne);
 
       // Tracé final du texte de la ligne
       ctx.shadowColor = 'transparent';
-      ctx.fillStyle = '#c3cbd5';
+      ctx.fillStyle = '#4A5568';
       ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
 
       ctx.restore();
