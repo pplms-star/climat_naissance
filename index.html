@@ -1263,19 +1263,11 @@ const bandePlugin = {
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.textBaseline = 'top'; 
       ctx.textAlign = 'center';
+      ctx.fillStyle = '#c3cbd5';
       
       const xTexteBande = (x1 + x2) / 2;
       const yTexteBande = chartArea.top + 4;
       const texteBande = `référence ${refDebut}-${refFin}`;
-
-      // Contour pour l'étiquette du haut
-      ctx.strokeStyle = '#FFFFFF'; // Couleur du fond de votre graphique
-      ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round';
-      ctx.strokeText(texteBande, xTexteBande, yTexteBande);
-      
-      ctx.fillStyle = '#c3cbd5';
-      ctx.fillText(texteBande, xTexteBande, yTexteBande);
 
       // --- LIGNE HORIZONTALE ET TEXTE MOYENNE ---
       const yPix = y.getPixelForValue(d.moyenne_reference);
@@ -1304,7 +1296,7 @@ const bandePlugin = {
 
       // Contour blanc autour des lettres
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = 1.5;
       ctx.lineJoin = 'round';
       ctx.strokeText(texteLigne, xTexteLigne, yTexteLigne);
 
