@@ -372,8 +372,8 @@
     </div>
 
     <p class="texte reveal" id="texte-national-transition" style="margin-top:32px;">
-      Continue à scroller : le même graphique se transforme maintenant en écart à cette référence,
-      année par année — <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
+      Et si on transforme ce graphique en écarts à la référence, année par année, ça donne ça : 
+      <span style="color:var(--cold)">bleu</span> pour les années plus fraîches
       que la normale, <span style="color:var(--warm)">rouge</span> pour les années plus chaudes.
     </p>
 
@@ -392,7 +392,7 @@
 
     <section id="sec-reference" class="reveal">
       <p class="eyebrow">Étape 2 · la référence</p>
-      <h2>D'abord, fixons un point de comparaison</h2>
+      <h2>Et plus localement ?</h2>
       <p class="texte" id="texte-reference"></p>
       <div class="encadre-methode">
         <b>Méthode</b> — on compare ta période de référence (30 ans centrés sur ta
@@ -933,10 +933,24 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
       ctx.save();
       ctx.globalAlpha = bandesEtLignesEtat.opacite;
-      ctx.fillStyle = 'rgba(143,160,184,0.22)'; // gris = période de référence
+      ctx.fillStyle = '#c3cbd5'; // gris = période de référence
       ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+      ctx.restore();
+    },
+
 
       // Étiquette en haut de la bande
+     afterDatasetsDraw(chart){
+      if(bandesEtLignesEtat.opacite <= 0) return;
+      const {ctx, chartArea, scales:{x}} = chart;
+      if(!chartArea) return;
+
+      const x1 = x.getPixelForValue(Math.max(ref.start, dataMinAxe));
+      const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
+
+      ctx.save();
+      // On force l'opacité à 1.0 (ou une valeur fixe) pour que le texte reste net et opaque par-dessus les données
+      ctx.globalAlpha = 1.0; 
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top';
