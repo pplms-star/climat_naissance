@@ -1228,6 +1228,7 @@ function construireAvenir(data, annees, actuel){
     cartes.appendChild(div);
   });
 }
+
 // ============ Étape 1 : contexte national (France entière) ============
 let donneesNationales = null;
 
@@ -1244,7 +1245,8 @@ async function chargerDonneesNationales(){
 
 function construireGraphNational(){
   const d = donneesNationales;
-  const dataMinAxe = d.annees[0].annee, dataMaxAxe = d.annees[d.annees.length-1].annee;
+  const dataMinAxe = d.annees[0].annee;
+  const dataMaxAxe = d.annees[d.annees.length-1].annee;
   const pointsValeurs = d.annees.map(a => ({x:a.annee, y:a.tm}));
   const mobile = moyenneMobile(d.annees, 'tm');
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
@@ -1295,19 +1297,17 @@ function construireGraphNational(){
       ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
 
-      // Configuration du texte (DÉCALÉ À DROITE HORS DU GRAPHIQUE)
+      // Configuration du texte (DÉCALÉ À DROITE SUR DEUX LIGNES)
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.fillStyle = '#c3cbd5'; 
       ctx.textAlign = 'left';       
       
       const xTexteLigne = chartArea.right + 10; 
-      const valeurMoyenne = `${d.moyenne_reference.toFixed(1)}°C`; // <-- AJOUTÉ : définition manquante
+      const valeurMoyenne = `${d.moyenne_reference.toFixed(1)}°C`;
 
-      // Séparation de la phrase en deux lignes indépendantes
       const ligne1 = "moyenne de référence :";
       const ligne2 = valeurMoyenne;
 
-      // On ajuste la hauteur pour que la ligne horizontale passe pile entre les deux lignes de texte
       ctx.textBaseline = 'bottom'; 
       ctx.fillText(ligne1, xTexteLigne, yPix - 2);
 
@@ -1315,8 +1315,8 @@ function construireGraphNational(){
       ctx.fillText(ligne2, xTexteLigne, yPix + 2);
 
       ctx.restore(); 
-    } // <-- ACCOLADE DE FIN DE FONCTION RÉPARÉE
-  }; // <-- ACCOLADE DE FIN DE PLUGIN RÉPARÉE
+    }
+  }; // <-- Objet bandePlugin correctement fermé ici
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
@@ -1331,7 +1331,7 @@ function construireGraphNational(){
       responsive:true, maintainAspectRatio:false,
       layout: {
         padding: {
-          right: 180 // <-- Réduit à 180px puisque le texte est sur 2 lignes désormais
+          right: 180 // Espace optimisé pour le texte sur deux lignes
         }
       },
       animation:{
@@ -1340,7 +1340,7 @@ function construireGraphNational(){
         delay(context){
           if(context.type === 'data' && context.mode === 'default'){
             if(context.datasetIndex === 0) return context.dataIndex * 18;
-            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22;
+            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22; // <-- pointsValeurs est maintenant parfaitement accessible
           }
           return 0;
         }
@@ -1353,7 +1353,8 @@ function construireGraphNational(){
     },
     plugins:[bandePlugin]
   });
-}
+} // <-- Fin complète de la fonction construireGraphNational
+
 
 
 
