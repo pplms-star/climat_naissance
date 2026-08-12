@@ -1251,6 +1251,9 @@ function construireGraphNational(){
   const mobile = moyenneMobile(d.annees, 'tm');
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
+  
+  // Sécurité pour l'animation
+  const nbPoints = pointsValeurs.length;
 
   const bandePlugin = {
     id: 'bande_national',
@@ -1316,7 +1319,7 @@ function construireGraphNational(){
 
       ctx.restore(); 
     }
-  }; // <-- Objet bandePlugin correctement fermé ici
+  };
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
@@ -1331,7 +1334,7 @@ function construireGraphNational(){
       responsive:true, maintainAspectRatio:false,
       layout: {
         padding: {
-          right: 180 // Espace optimisé pour le texte sur deux lignes
+          right: 180 // Marge optimisée pour les deux lignes de texte
         }
       },
       animation:{
@@ -1340,7 +1343,7 @@ function construireGraphNational(){
         delay(context){
           if(context.type === 'data' && context.mode === 'default'){
             if(context.datasetIndex === 0) return context.dataIndex * 18;
-            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22; // <-- pointsValeurs est maintenant parfaitement accessible
+            if(context.datasetIndex === 1) return nbPoints * 18 + 300 + context.dataIndex * 22;
           }
           return 0;
         }
@@ -1353,47 +1356,7 @@ function construireGraphNational(){
     },
     plugins:[bandePlugin]
   });
-} // <-- Fin complète de la fonction construireGraphNational
-
-
-
-
-  if(charts['graph-national']) charts['graph-national'].destroy();
-  charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
-    type:'line',
-    data:{ datasets:[
-      {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
-       backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
-      {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
-       borderWidth:2.5, pointRadius:0, tension:0.3}
-    ]},
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      // --- INTEGRATION DE LA MARGE DE DROITE POUR ACCUEILLIR LE TEXTE ---
-      layout: {
-        padding: {
-          right: 340
-        }
-      },
-      animation:{
-        duration:500,
-        easing:'easeOutQuart',
-        delay(context){
-          if(context.type === 'data' && context.mode === 'default'){
-            if(context.datasetIndex === 0) return context.dataIndex * 18;
-            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22;
-          }
-          return 0;
-        }
-      },
-      plugins:{legend:{display:true, position:'top', labels:{color:'#c3cbd5', boxWidth:12, usePointStyle:true}}},
-      scales:{
-        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#c3cbd5', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
-        y:{ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'}}
-      }
-    },
-    plugins:[bandePlugin]
-  });
+} // <-- Fin de la fonction (le bloc en double en dessous a été supprimé)
 
 
 function construireGraphNationalBarres(){
