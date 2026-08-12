@@ -14,7 +14,7 @@
     --panel:#131C2E;
     --panel-border:#233047;
     --text:#EAEFF3;
-    --text-muted:#8FA0B8;
+    --text-muted:#c3cbd5;
     --cold:#3E7CB1;
     --warm:#D64545;
     --amber:#E8A33D;
@@ -788,7 +788,7 @@ function construireRecit(data, anneeNaissance){
   const annees = data.annees;
   const dataMin = annees[0].annee, dataMax = annees[annees.length-1].annee;
   let ref = fenetrePersonnelle(anneeNaissance, dataMin, dataMax);
-  // "Aujourd'hui" = les 10 dernières années disponibles pour CETTE station,
+  // "Aujourd'hui" = les 10 dernières années disponibles pour cette station,
   // toujours la même règle simple, quelle que soit la station.
   const DUREE_ACTUEL = 10;
   const actuel = {start: Math.max(dataMin, dataMax - DUREE_ACTUEL + 1), end: dataMax};
@@ -865,11 +865,11 @@ function construireRecit(data, anneeNaissance){
     annees, cle:'ete_tm_moy', ref, anneeNaissance,
     idTexte:'texte-ete', idCanvas:'graph-ete',
     phrase: (v1, decennieRecente, moyenneRecente) => `Pendant ta période de référence
-      (${ref.start}–${ref.end}), l'été affichait en moyenne <strong>${v1.toFixed(1)}°C</strong>.
+      (${ref.start}–${ref.end}), l'été (juin-juillet-août) affichait en moyenne <strong>${v1.toFixed(1)}°C</strong>.
       ${moyenneRecente != null ? `Sur <strong>${decennieRecente.start}–${decennieRecente.end}</strong>,
       la dernière décennie disponible pour cette station, la moyenne est de
       <strong>${moyenneRecente.toFixed(1)}°C</strong>.` : ''}
-      Regarde comment les points se placent par rapport à la ligne horizontale au fil des années.`
+      Les points représentent la température moyenne annuelle estivale, et la ligne la moyenne glissante sur 10 ans. `
   }));
 
   // --- étape 4 : hiver ---
@@ -938,7 +938,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
       // Étiquette en haut de la bande
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#8FA0B8';
+      ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
       const centre = (x1 + x2) / 2;
@@ -1039,11 +1039,11 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
           }
         }
       },
-      plugins:{ legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}} },
+      plugins:{ legend:{display:true, position:'top', labels:{color:'#c3cbd5', boxWidth:12, usePointStyle:true}} },
       scales:{
         x:{ type:'linear', min:dataMinAxe, max:dataMaxAxe,
-            ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'} },
-        y:{ ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'} }
+            ticks:{color:'#c3cbd5', stepSize:10, precision:0}, grid:{color:'#1A2436'} },
+        y:{ ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'} }
       }
     },
     plugins:[bandesPlugin, lignePlugin]
@@ -1100,10 +1100,10 @@ function construireGraphExtremes(annees, ref, actuel){
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      plugins:{ legend:{display:true, position:'top', labels:{color:'#8FA0B8'}} },
+      plugins:{ legend:{display:true, position:'top', labels:{color:'#c3cbd5'}} },
       scales:{
-        x:{ ticks:{color:'#8FA0B8'}, grid:{display:false} },
-        y:{ ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}, title:{display:true,text:'jours / an en moyenne',color:'#8FA0B8'} }
+        x:{ ticks:{color:'#c3cbd5'}, grid:{display:false} },
+        y:{ ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'}, title:{display:true,text:'jours / an en moyenne',color:'#c3cbd5'} }
       }
     }
   });
@@ -1227,13 +1227,13 @@ function construireGraphNational(){
       ctx.fillStyle = 'rgba(143,160,184,0.22)';
       ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#8FA0B8';
+      ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top'; ctx.textAlign = 'center';
       ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
 
       const yPix = y.getPixelForValue(d.moyenne_reference);
       ctx.beginPath();
-      ctx.strokeStyle = '#8FA0B8'; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = '#c3cbd5'; ctx.lineWidth = 1.5;
       ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
       ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
@@ -1264,10 +1264,10 @@ function construireGraphNational(){
           return 0;
         }
       },
-      plugins:{legend:{display:true, position:'top', labels:{color:'#8FA0B8', boxWidth:12, usePointStyle:true}}},
+      plugins:{legend:{display:true, position:'top', labels:{color:'#c3cbd5', boxWidth:12, usePointStyle:true}}},
       scales:{
-        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#8FA0B8', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
-        y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}}
+        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#c3cbd5', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
+        y:{ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'}}
       }
     },
     plugins:[bandePlugin]
@@ -1293,8 +1293,8 @@ function construireGraphNationalBarres(){
       animation:{duration:1400, easing:'easeOutQuart'},
       plugins:{legend:{display:false}},
       scales:{
-        x:{ticks:{color:'#8FA0B8', maxTicksLimit:12}, grid:{display:false}},
-        y:{ticks:{color:'#8FA0B8'}, grid:{color:'#1A2436'}, title:{display:true, text:'écart en °C', color:'#8FA0B8'}}
+        x:{ticks:{color:'#c3cbd5', maxTicksLimit:12}, grid:{display:false}},
+        y:{ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'}, title:{display:true, text:'écart en °C', color:'#c3cbd5'}}
       }
     }
   });
