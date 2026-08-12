@@ -2,7 +2,7 @@
 
 Site statique en format "scrollytelling" : une phrase à trous (année de
 naissance + commune) déclenche un récit qui se construit au scroll, en 7
-étapes — contexte national, référence personnelle, été, année, vue
+étapes — contexte national, référence personnelle, été, hiver, année, vue
 d'ensemble, extrêmes, projections futures.
 
 **Couverture actuelle** : Alsace entière (Bas-Rhin + Haut-Rhin), via 132
