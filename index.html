@@ -980,9 +980,9 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.stroke();
         ctx.font = '11px IBM Plex Mono, monospace';
         ctx.fillStyle = '#c3cbd5';
-        ctx.textBaseline = 'bottom';
+        ctx.textBaseline = 'top';
         ctx.textAlign = 'right';
-        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix - 3);
+        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
       }
       ctx.restore();
     }
