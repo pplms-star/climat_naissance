@@ -949,7 +949,6 @@ const bandesPlugin = {
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
 
       ctx.save();
-      // On force l'opacité à 1.0 (ou une valeur fixe) pour que le texte reste net et opaque par-dessus les données
       ctx.globalAlpha = 1.0; 
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.fillStyle = '#c3cbd5';
@@ -960,18 +959,19 @@ const bandesPlugin = {
 
       ctx.restore();
     }
- };
+};
 
-  const lignePlugin = {
+const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x, y}} = chart;
       if(!chartArea) return;
-      ctx.save();
+      
+      ctx.save(); // Sauvegarde l'état global du canvas
       ctx.globalAlpha = bandesEtLignesEtat.opacite;
 
-     // Trait vertical : année de naissance
+      // Trait vertical : année de naissance
       if(anneeNaissance >= dataMinAxe && anneeNaissance <= dataMaxAxe){
         const xPix = x.getPixelForValue(anneeNaissance);
         ctx.strokeStyle = '#EAEFF3';
@@ -1013,6 +1013,7 @@ const bandesPlugin = {
       ctx.restore(); // Restaure proprement l'état pour les prochains rendus
     }
 };
+
 
 
 
