@@ -938,8 +938,8 @@ const bandesPlugin = {
       ctx.restore();
     },
          
-    // Étiquette en haut de la bande
-    afterDatasetsDraw(chart){
+     // Étiquette en haut de la bande
+     afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
@@ -948,38 +948,20 @@ const bandesPlugin = {
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
 
       ctx.save();
+      // On force l'opacité à 1.0 (ou une valeur fixe) pour que le texte reste net et opaque par-dessus les données
       ctx.globalAlpha = 1.0; 
       ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#c3cbd5';
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
-
-      // --- CALCUL DES COORDONNÉES ET DU TEXTE ---
       const centre = (x1 + x2) / 2;
-      const xTexte = Math.min(Math.max(centre, x1 + 4), x2 - 4);
-      const yTexte = chartArea.top + 4;
-      const texteBande = `référence : ${ref.start}–${ref.end}`;
-
-      // --- EFFETS : OMBRAGE ET CONTOUR (AJOUTÉ ICI) ---
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-      ctx.shadowBlur = 3;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-
-      ctx.strokeStyle = '#FFFFFF'; // Couleur du fond de votre graphique
-      ctx.lineWidth = 3.5;
-      ctx.lineJoin = 'round';
-      ctx.strokeText(texteBande, xTexte, yTexte);
-
-      // --- DESSIN DU TEXTE FINAL ---
-      ctx.shadowColor = 'transparent'; // Désactive l'ombre pour garder les lettres nettes
-      ctx.fillStyle = '#c3cbd5';
-      ctx.fillText(texteBande, xTexte, yTexte);
+      ctx.fillText(`référence : ${ref.start}–${ref.end}`, Math.min(Math.max(centre, x1 + 4), x2 - 4), chartArea.top + 4);
 
       ctx.restore();
     }
-};
+ };
 
-const lignePlugin = {
+  const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
@@ -1011,35 +993,15 @@ const lignePlugin = {
         ctx.moveTo(chartArea.left, yPix);
         ctx.lineTo(chartArea.right, yPix);
         ctx.stroke();
-
         ctx.font = '11px IBM Plex Mono, monospace';
+        ctx.fillStyle = '#c3cbd5';
         ctx.textBaseline = 'top';
         ctx.textAlign = 'right';
-
-        // --- CALCUL DES COORDONNÉES ET DU TEXTE ---
-        const xLigne = chartArea.right - 4;
-        const yLigne = yPix + 3;
-        const texteLigne = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`;
-
-        // --- EFFETS : OMBRAGE ET CONTOUR (AJOUTÉ ICI) ---
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-        ctx.shadowBlur = 3;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
-
-        ctx.strokeStyle = '#FFFFFF'; // Même couleur que le fond du graphique
-        ctx.lineWidth = 3.5;
-        ctx.lineJoin = 'round';
-        ctx.strokeText(texteLigne, xLigne, yLigne);
-
-        // --- DESSIN DU TEXTE FINAL ---
-        ctx.shadowColor = 'transparent'; // Désactive l'ombre pour garder les lettres nettes
-        ctx.fillStyle = '#c3cbd5';
-        ctx.fillText(texteLigne, xLigne, yLigne);
+        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
       }
-      ctx.restore();
-    }
-};
+        ctx.restore();
+      }
+    };
 
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
