@@ -1232,30 +1232,91 @@ function construireGraphNational(){
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
 
-  const bandePlugin = {
+const bandePlugin = {
     id: 'bande_national',
+    
+    // 1. Dessin de la bande grise en ARRIÈRE-PLAN
     beforeDraw(chart){
-      const {ctx, chartArea, scales:{x, y}} = chart;
+      const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
-      const x1 = x.getPixelForValue(refDebut), x2 = x.getPixelForValue(refFin);
+      
+      const x1 = x.getPixelForValue(refDebut);
+      const x2 = x.getPixelForValue(refFin);
+      
       ctx.save();
       ctx.fillStyle = 'rgba(143,160,184,0.22)';
-      ctx.fillRect(x1, chartArea.top, x2-x1, chartArea.bottom-chartArea.top);
-      ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#c3cbd5';
-      ctx.textBaseline = 'top'; ctx.textAlign = 'center';
-      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
+      ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+      ctx.restore();
+    },
 
+    // 2. Dessin du texte et de la ligne de moyenne au PREMIER PLAN
+    afterDatasetsDraw(chart){
+      const {ctx, chartArea, scales:{x, y}} = chart;
+      if(!chartArea) return;
+      
+      const x1 = x.getPixelForValue(refDebut);
+      const x2 = x.getPixelForValue(refFin);
+
+      ctx.save();
+      
+      // --- ÉTIQUETTE DE LA BANDE DE RÉFÉRENCE ---
+      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.textBaseline = 'top'; 
+      ctx.textAlign = 'center';
+      
+      const xTexteBande = (x1 + x2) / 2;
+      const yTexteBande = chartArea.top + 4;
+      const texteBande = `référence ${refDebut}-${refFin}`;
+
+      // Contour pour l'étiquette du haut
+      ctx.strokeStyle = '#FFFFFF'; // Couleur du fond de votre graphique
+      ctx.lineWidth = 3.5;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(texteBande, xTexteBande, yTexteBande);
+      
+      ctx.fillStyle = '#c3cbd5';
+      ctx.fillText(texteBande, xTexteBande, yTexteBande);
+
+      // --- LIGNE HORIZONTALE ET TEXTE MOYENNE ---
       const yPix = y.getPixelForValue(d.moyenne_reference);
+      
+      // Tracé du trait horizontal (Passe au-dessus du quadrillage)
       ctx.beginPath();
-      ctx.strokeStyle = '#c3cbd5'; ctx.lineWidth = 1.5;
-      ctx.moveTo(chartArea.left, yPix); ctx.lineTo(chartArea.right, yPix);
+      ctx.strokeStyle = '#c3cbd5'; 
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(chartArea.left, yPix); 
+      ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
-      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-      ctx.fillText(`moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`, chartArea.right-4, yPix-3);
+
+      // Configuration du texte sous la ligne
+      ctx.textAlign = 'right'; 
+      ctx.textBaseline = 'top'; // Modifié 'bottom' -> 'top' pour passer SOUS la ligne
+      
+      const xTexteLigne = chartArea.right - 4;
+      const yTexteLigne = yPix + 3; // Modifié -3 -> +3 pour le décalage vers le bas
+      const texteLigne = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+
+      // Effet d'ombrage léger pour détacher le texte des courbes
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+
+      // Contour blanc autour des lettres
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 3.5;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(texteLigne, xTexteLigne, yTexteLigne);
+
+      // Tracé final du texte de la ligne
+      ctx.shadowColor = 'transparent';
+      ctx.fillStyle = '#c3cbd5';
+      ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
+
       ctx.restore();
     }
-  };
+};
+
 
   if(charts['graph-national']) charts['graph-national'].destroy();
   charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
