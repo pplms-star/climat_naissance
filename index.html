@@ -1232,7 +1232,7 @@ function construireAvenir(data, annees, actuel){
 // ============ Étape 1 : contexte national (France entière) ============
 let donneesNationales = null;
 
-async function chargerDonneesNationales()){
+async function chargerDonneesNationales(){
   try{
     const res = await fetch('data/france-nationale.json');
     donneesNationales = await res.json();
