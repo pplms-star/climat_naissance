@@ -1304,7 +1304,9 @@ function construireGraphNational(){
       
       const xTexteLigne = chartArea.right + 10; // Démarre 10px après le graphique
       const yTexteLigne = yPix; 
-      const texteLigne = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
+      // Séparation de la phrase en deux lignes indépendantes
+      const ligne1 = "moyenne de référence :";
+      const ligne2 = valeurMoyenne;
 
       ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
       ctx.restore(); // <-- ACCORDE CORRIGÉE : replacée correctement à l'intérieur d'afterDatasetsDraw
