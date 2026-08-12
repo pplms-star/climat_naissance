@@ -933,7 +933,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       const x2 = x.getPixelForValue(Math.min(ref.end, dataMaxAxe));
       ctx.save();
       ctx.globalAlpha = bandesEtLignesEtat.opacite;
-      ctx.fillStyle = '#c3cbd5'; // gris = période de référence
+      ctx.fillStyle = 'rgba(143,160,184,0.22)'; // gris = période de référence
       ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
       ctx.restore();
     },
