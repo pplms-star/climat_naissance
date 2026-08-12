@@ -949,7 +949,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
   const lignePlugin = {
     id: 'ligne_' + idCanvas,
-    afterDraw(chart){
+    afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x, y}} = chart;
       if(!chartArea) return;
@@ -968,6 +968,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.stroke();
         ctx.setLineDash([]);
       }
+      ctx.globalAlpha = 1.0; 
 
       // Ligne horizontale : moyenne de la période de référence (façon RTBF)
       if(v1 != null){
@@ -984,9 +985,9 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.textAlign = 'right';
         ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
       }
-      ctx.restore();
-    }
-  };
+        ctx.restore();
+      }
+    };
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
 
