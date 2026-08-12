@@ -1308,10 +1308,15 @@ function construireGraphNational(){
       const ligne1 = "moyenne de référence :";
       const ligne2 = valeurMoyenne;
 
-      ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
-      ctx.restore(); // <-- ACCORDE CORRIGÉE : replacée correctement à l'intérieur d'afterDatasetsDraw
+      // On ajuste la hauteur pour que la ligne horizontale passe pile entre les deux lignes de texte
+      ctx.textBaseline = 'bottom'; // Ligne 1 juste au-dessus de l'axe de la ligne
+      ctx.fillText(ligne1, xTexteLigne, yPix - 2);
+
+      ctx.textBaseline = 'top';    // Ligne 2 juste en-dessous de l'axe de la ligne
+      ctx.fillText(ligne2, xTexteLigne, yPix + 2);
+
+      ctx.restore(); 
     }
-  };
 
 
   if(charts['graph-national']) charts['graph-national'].destroy();
