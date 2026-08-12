@@ -994,12 +994,18 @@ const bandesPlugin = {
         ctx.moveTo(chartArea.left, yPix);
         ctx.lineTo(chartArea.right, yPix);
         ctx.stroke();
+        
         ctx.font = '11px IBM Plex Mono, monospace';
         ctx.fillStyle = '#c3cbd5';
-        ctx.textBaseline = 'top';
-        ctx.textAlign = 'right';
-        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
-      }
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+
+        // Le texte commence 10 pixels APRÈS la zone des courbes (dans l'espace blanc de 280px)
+        const xTexteLigne = chartArea.right + 10; 
+        const yTexteLigne = yPix; 
+        const texteLigne = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
+        // Dessin du texte dans la zone de droite
+        ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
         ctx.restore();
       }
     };
