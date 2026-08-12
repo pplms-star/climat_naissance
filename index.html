@@ -1232,7 +1232,7 @@ function construireAvenir(data, annees, actuel){
 // ============ Étape 1 : contexte national (France entière) ============
 let donneesNationales = null;
 
-async function chargerDonneesNationales(){
+async function chargerDonneesNationales()){
   try{
     const res = await fetch('data/france-nationale.json');
     donneesNationales = await res.json();
@@ -1251,7 +1251,7 @@ function construireGraphNational(){
   const pointsMobile = d.annees.map((a,i) => ({x:a.annee, y:mobile[i]})).filter(p => p.y != null);
   const [refDebut, refFin] = d.periode_reference;
 
-const bandePlugin = {
+  const bandePlugin = {
     id: 'bande_national',
     
     // 1. Dessin de la bande grise en ARRIÈRE-PLAN
@@ -1278,9 +1278,9 @@ const bandePlugin = {
 
       ctx.save();
       
-// --- ÉTIQUETTE DE LA BANDE DE RÉFÉRENCE (REMISE COMPLÈTEMENT À L'ORIGINE) ---
+      // --- ÉTIQUETTE DE LA BANDE DE RÉFÉRENCE ---
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#c3cbd5'; // Version claire d'origine
+      ctx.fillStyle = '#c3cbd5'; 
       ctx.textBaseline = 'top'; 
       ctx.textAlign = 'center';
       ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
@@ -1288,7 +1288,7 @@ const bandePlugin = {
       // --- LIGNE HORIZONTALE ET TEXTE MOYENNE ---
       const yPix = y.getPixelForValue(d.moyenne_reference);
       
-      // Tracé du trait horizontal (Passe au-dessus du quadrillage)
+      // Tracé du trait horizontal
       ctx.beginPath();
       ctx.strokeStyle = '#c3cbd5'; 
       ctx.lineWidth = 1.5;
@@ -1296,22 +1296,20 @@ const bandePlugin = {
       ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
 
- // Configuration du texte sous la ligne (SANS AUCUN CONTOUR NI OMBRE)
+      // Configuration du texte (DÉCALÉ À DROITE HORS DU GRAPHIQUE)
       ctx.font = '11px IBM Plex Mono, monospace';
-      ctx.fillStyle = '#c3cbd5'; // <-- MODIFIÉ : Gris foncé/anthracite pour une lecture nette par-dessus les courbes
-      ctx.textAlign = 'right'; 
-      ctx.textBaseline = 'top'; 
+      ctx.fillStyle = '#c3cbd5'; 
+      ctx.textAlign = 'left';       // Écrit de gauche à droite
+      ctx.textBaseline = 'middle';  // Aligné au milieu de la ligne
       
-      const xTexteLigne = chartArea.right - 4;
-      const yTexteLigne = yPix + 3; // Modifié -3 -> +3 pour le décalage vers le bas
+      const xTexteLigne = chartArea.right + 10; // Démarre 10px après le graphique
+      const yTexteLigne = yPix; 
       const texteLigne = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
 
-// Tracé direct et propre du texte
       ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
+      ctx.restore(); // <-- ACCORDE CORRIGÉE : replacée correctement à l'intérieur d'afterDatasetsDraw
     }
-      ctx.restore();
-    }
-};
+  };
 
 
   if(charts['graph-national']) charts['graph-national'].destroy();
@@ -1325,6 +1323,12 @@ const bandePlugin = {
     ]},
     options:{
       responsive:true, maintainAspectRatio:false,
+      // --- INTEGRATION DE LA MARGE DE DROITE POUR ACCUEILLIR LE TEXTE ---
+      layout: {
+        padding: {
+          right: 280 
+        }
+      },
       animation:{
         duration:500,
         easing:'easeOutQuart',
@@ -1345,6 +1349,7 @@ const bandePlugin = {
     plugins:[bandePlugin]
   });
 }
+
 
 function construireGraphNationalBarres(){
   const d = donneesNationales;
