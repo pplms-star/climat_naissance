@@ -1228,7 +1228,6 @@ function construireAvenir(data, annees, actuel){
     cartes.appendChild(div);
   });
 }
-
 // ============ Étape 1 : contexte national (France entière) ============
 let donneesNationales = null;
 
@@ -1299,24 +1298,63 @@ function construireGraphNational(){
       // Configuration du texte (DÉCALÉ À DROITE HORS DU GRAPHIQUE)
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.fillStyle = '#c3cbd5'; 
-      ctx.textAlign = 'left';       // Écrit de gauche à droite
-      ctx.textBaseline = 'middle';  // Aligné au milieu de la ligne
+      ctx.textAlign = 'left';       
       
-      const xTexteLigne = chartArea.right + 10; // Démarre 10px après le graphique
-      const yTexteLigne = yPix; 
+      const xTexteLigne = chartArea.right + 10; 
+      const valeurMoyenne = `${d.moyenne_reference.toFixed(1)}°C`; // <-- AJOUTÉ : définition manquante
+
       // Séparation de la phrase en deux lignes indépendantes
       const ligne1 = "moyenne de référence :";
       const ligne2 = valeurMoyenne;
 
       // On ajuste la hauteur pour que la ligne horizontale passe pile entre les deux lignes de texte
-      ctx.textBaseline = 'bottom'; // Ligne 1 juste au-dessus de l'axe de la ligne
+      ctx.textBaseline = 'bottom'; 
       ctx.fillText(ligne1, xTexteLigne, yPix - 2);
 
-      ctx.textBaseline = 'top';    // Ligne 2 juste en-dessous de l'axe de la ligne
+      ctx.textBaseline = 'top';    
       ctx.fillText(ligne2, xTexteLigne, yPix + 2);
 
       ctx.restore(); 
-    }
+    } // <-- ACCOLADE DE FIN DE FONCTION RÉPARÉE
+  }; // <-- ACCOLADE DE FIN DE PLUGIN RÉPARÉE
+
+  if(charts['graph-national']) charts['graph-national'].destroy();
+  charts['graph-national'] = new Chart(document.getElementById('graph-national'), {
+    type:'line',
+    data:{ datasets:[
+      {label:'Température moyenne annuelle', data:pointsValeurs, borderColor:'#ED7318',
+       backgroundColor:'#ED7318', borderWidth:1, pointRadius:3, showLine:false},
+      {label:'Moyenne mobile 10 ans', data:pointsMobile, borderColor:'#E8A33D',
+       borderWidth:2.5, pointRadius:0, tension:0.3}
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      layout: {
+        padding: {
+          right: 180 // <-- Réduit à 180px puisque le texte est sur 2 lignes désormais
+        }
+      },
+      animation:{
+        duration:500,
+        easing:'easeOutQuart',
+        delay(context){
+          if(context.type === 'data' && context.mode === 'default'){
+            if(context.datasetIndex === 0) return context.dataIndex * 18;
+            if(context.datasetIndex === 1) return pointsValeurs.length * 18 + 300 + context.dataIndex * 22;
+          }
+          return 0;
+        }
+      },
+      plugins:{legend:{display:true, position:'top', labels:{color:'#c3cbd5', boxWidth:12, usePointStyle:true}}},
+      scales:{
+        x:{type:'linear', min:dataMinAxe, max:dataMaxAxe, ticks:{color:'#c3cbd5', stepSize:10, precision:0}, grid:{color:'#1A2436'}},
+        y:{ticks:{color:'#c3cbd5'}, grid:{color:'#1A2436'}}
+      }
+    },
+    plugins:[bandePlugin]
+  });
+}
+
 
 
   if(charts['graph-national']) charts['graph-national'].destroy();
