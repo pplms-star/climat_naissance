@@ -1277,28 +1277,17 @@ const bandePlugin = {
       ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
 
+ // Configuration du texte sous la ligne (SANS AUCUN CONTOUR NI OMBRE)
+      ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#4A5568'; // <-- MODIFIÉ : Gris foncé/anthracite pour une lecture nette par-dessus les courbes
       ctx.textAlign = 'right'; 
-      ctx.textBaseline = 'top';
+      ctx.textBaseline = 'top'; 
       
       const xTexteLigne = chartArea.right - 4;
       const yTexteLigne = yPix + 3; // Modifié -3 -> +3 pour le décalage vers le bas
       const texteLigne = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
 
-      // Effet d'ombrage léger pour détacher le texte des courbes
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.10)';
-      ctx.shadowBlur = 2;
-      ctx.shadowOffsetX = 0.5;
-      ctx.shadowOffsetY = 0.5;
-
-      // Contour blanc autour des lettres
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 1.0;
-      ctx.lineJoin = 'round';
-      ctx.strokeText(texteLigne, xTexteLigne, yTexteLigne);
-
-      // Tracé final du texte de la ligne
-      ctx.shadowColor = 'transparent';
-      ctx.fillStyle = '#4A5568';
+// Tracé direct et propre du texte
       ctx.fillText(texteLigne, xTexteLigne, yTexteLigne);
 
       ctx.restore();
