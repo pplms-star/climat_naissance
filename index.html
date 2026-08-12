@@ -1259,15 +1259,12 @@ const bandePlugin = {
 
       ctx.save();
       
-      // --- ÉTIQUETTE DE LA BANDE DE RÉFÉRENCE ---
+// --- ÉTIQUETTE DE LA BANDE DE RÉFÉRENCE (REMISE COMPLÈTEMENT À L'ORIGINE) ---
       ctx.font = '11px IBM Plex Mono, monospace';
+      ctx.fillStyle = '#c3cbd5'; // Version claire d'origine
       ctx.textBaseline = 'top'; 
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#c3cbd5';
-      
-      const xTexteBande = (x1 + x2) / 2;
-      const yTexteBande = chartArea.top + 4;
-      const texteBande = `référence ${refDebut}-${refFin}`;
+      ctx.fillText(`référence ${refDebut}-${refFin}`, (x1+x2)/2, chartArea.top+4);
 
       // --- LIGNE HORIZONTALE ET TEXTE MOYENNE ---
       const yPix = y.getPixelForValue(d.moyenne_reference);
@@ -1280,19 +1277,18 @@ const bandePlugin = {
       ctx.lineTo(chartArea.right, yPix);
       ctx.stroke();
 
-      // Configuration du texte sous la ligne
       ctx.textAlign = 'right'; 
-      ctx.textBaseline = 'top'; // Modifié 'bottom' -> 'top' pour passer SOUS la ligne
+      ctx.textBaseline = 'top';
       
       const xTexteLigne = chartArea.right - 4;
       const yTexteLigne = yPix + 3; // Modifié -3 -> +3 pour le décalage vers le bas
       const texteLigne = `moyenne de référence : ${d.moyenne_reference.toFixed(1)}°C`;
 
       // Effet d'ombrage léger pour détacher le texte des courbes
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-      ctx.shadowBlur = 3;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.10)';
+      ctx.shadowBlur = 2;
+      ctx.shadowOffsetX = 0.5;
+      ctx.shadowOffsetY = 0.5;
 
       // Contour blanc autour des lettres
       ctx.strokeStyle = '#FFFFFF';
