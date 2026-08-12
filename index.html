@@ -972,14 +972,14 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       // Ligne horizontale : moyenne de la période de référence (façon RTBF)
       if(v1 != null){
         const yPix = y.getPixelForValue(v1);
-        ctx.strokeStyle = '#8FA0B8';
+        ctx.strokeStyle = '#c3cbd5';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(chartArea.left, yPix);
         ctx.lineTo(chartArea.right, yPix);
         ctx.stroke();
         ctx.font = '11px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#8FA0B8';
+        ctx.fillStyle = '#c3cbd5';
         ctx.textBaseline = 'bottom';
         ctx.textAlign = 'right';
         ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix - 3);
