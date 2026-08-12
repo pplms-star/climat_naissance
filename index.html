@@ -923,7 +923,7 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
   const bandesEtLignesEtat = {opacite: 0}; // 0 = invisible, 1 = pleinement visible (fondu progressif)
 
-  const bandesPlugin = {
+const bandesPlugin = {
     id: 'bandes_' + idCanvas,
     beforeDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
@@ -937,11 +937,9 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
       ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
       ctx.restore();
     },
-
-
-      // Étiquette en haut de la bande
-         // Dans la partie afterDatasetsDraw(chart) de bandesPlugin :
-    afterDatasetsDraw(chart) {
+         
+    // Étiquette en haut de la bande
+    afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
       const {ctx, chartArea, scales:{x}} = chart;
       if(!chartArea) return;
@@ -951,39 +949,37 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
 
       ctx.save();
       ctx.globalAlpha = 1.0; 
-
       ctx.font = '11px IBM Plex Mono, monospace';
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
-      
+
+      // --- CALCUL DES COORDONNÉES ET DU TEXTE ---
       const centre = (x1 + x2) / 2;
       const xTexte = Math.min(Math.max(centre, x1 + 4), x2 - 4);
       const yTexte = chartArea.top + 4;
-      const texte = `référence : ${ref.start}–${ref.end}`;
+      const texteBande = `référence : ${ref.start}–${ref.end}`;
 
-      // --- CONFIGURATION DE L'OMBRE ---
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)'; // Ombre noire très douce
-      ctx.shadowBlur = 3;                      // Flou de l'ombre
-      ctx.shadowOffsetX = 1;                   // Décalage horizontal
-      ctx.shadowOffsetY = 1;                   // Décalage vertical
+      // --- EFFETS : OMBRAGE ET CONTOUR (AJOUTÉ ICI) ---
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
 
-      // --- CONFIGURATION DU CONTOUR ---
-      ctx.strokeStyle = '#FFFFFF';             // Couleur du fond de votre graphique
-      ctx.lineWidth = 3.5;                     // Épaisseur du contour
+      ctx.strokeStyle = '#FFFFFF'; // Couleur du fond de votre graphique
+      ctx.lineWidth = 3.5;
       ctx.lineJoin = 'round';
-      
-      // On dessine le contour (l'ombre s'applique aussi dessus automatiquement)
-      ctx.strokeText(texte, xTexte, yTexte);
+      ctx.strokeText(texteBande, xTexte, yTexte);
 
-      // --- DESSIN DU TEXTE PRINCIPAL ---
-      ctx.shadowColor = 'transparent';         // On coupe l'ombre pour le texte final
+      // --- DESSIN DU TEXTE FINAL ---
+      ctx.shadowColor = 'transparent'; // Désactive l'ombre pour garder les lettres nettes
       ctx.fillStyle = '#c3cbd5';
-      ctx.fillText(texte, xTexte, yTexte);
-      
+      ctx.fillText(texteBande, xTexte, yTexte);
+
       ctx.restore();
     }
+};
 
-  const lignePlugin = {
+const lignePlugin = {
     id: 'ligne_' + idCanvas,
     afterDatasetsDraw(chart){
       if(bandesEtLignesEtat.opacite <= 0) return;
@@ -1015,15 +1011,36 @@ function construireIndicateur({annees, cle, ref, anneeNaissance, idTexte, idCanv
         ctx.moveTo(chartArea.left, yPix);
         ctx.lineTo(chartArea.right, yPix);
         ctx.stroke();
+
         ctx.font = '11px IBM Plex Mono, monospace';
-        ctx.fillStyle = '#c3cbd5';
         ctx.textBaseline = 'top';
         ctx.textAlign = 'right';
-        ctx.fillText(`Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`, chartArea.right - 4, yPix + 3);
+
+        // --- CALCUL DES COORDONNÉES ET DU TEXTE ---
+        const xLigne = chartArea.right - 4;
+        const yLigne = yPix + 3;
+        const texteLigne = `Température moyenne sur la période de votre naissance : ${v1.toFixed(1)}°C`;
+
+        // --- EFFETS : OMBRAGE ET CONTOUR (AJOUTÉ ICI) ---
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+
+        ctx.strokeStyle = '#FFFFFF'; // Même couleur que le fond du graphique
+        ctx.lineWidth = 3.5;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(texteLigne, xLigne, yLigne);
+
+        // --- DESSIN DU TEXTE FINAL ---
+        ctx.shadowColor = 'transparent'; // Désactive l'ombre pour garder les lettres nettes
+        ctx.fillStyle = '#c3cbd5';
+        ctx.fillText(texteLigne, xLigne, yLigne);
       }
-        ctx.restore();
-      }
-    };
+      ctx.restore();
+    }
+};
+
 
   if(charts[idCanvas]) charts[idCanvas].destroy();
 
